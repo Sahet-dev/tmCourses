@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
-class HomeController
+class CourseController extends Controller
 {
     public function index()
     {
@@ -23,4 +25,20 @@ class HomeController
         ]);
     }
 
+    // API methods for admin
+    public function store(Request $request)
+    {
+        // Store logic
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Update logic
+    }
+
+    public function destroy($id)
+    {
+        // Delete logic
+    }
 }
+
