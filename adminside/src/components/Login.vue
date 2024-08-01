@@ -1,67 +1,91 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="w-full max-w-md p-8 bg-white rounded shadow-md">
-            <h2 class="text-2xl font-bold mb-6">Admin Login</h2>
-            <form @submit.prevent="login">
-                <div class="mb-4">
-                    <label class="block text-gray-700">Email</label>
-                    <input type="email" v-model="email" class="w-full px-3 py-2 border rounded" required />
+    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+            <form @submit.prevent="login" class="space-y-4">
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        v-model="form.email"
+                        required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">Password</label>
-                    <input type="password" v-model="password" class="w-full px-3 py-2 border rounded" required />
+
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        v-model="form.password"
+                        required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700">
-                        <input type="checkbox" v-model="remember" /> Remember me
-                    </label>
+
+                <!-- Remember Me Checkbox -->
+                <div class="flex items-center">
+                    <input
+                        type="checkbox"
+                        id="remember"
+                        v-model="form.remember"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    />
+                    <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
                 </div>
-                <div class="text-red-500 mb-4" v-if="errorMessage">{{ errorMessage }}</div>
-                <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded">Login</button>
+
+                <!-- Error Message -->
+                <div v-if="errorMsg" class="text-red-500 text-sm">
+                    {{ errorMsg }}
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    :disabled="loading"
+                    class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                >
+                    <span v-if="loading" class="animate-spin inline-block mr-2">🔄</span>
+                    {{ loading ? 'Logging in...' : 'Login' }}
+                </button>
             </form>
         </div>
     </div>
 </template>
 
-<script>
-import apiClient from '../api/axios';
-import { useRouter } from 'vue-router';
+<script setup>
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
+import store from '../store/index.js';
 
-export default {
-    data() {
-        return {
-            email: '',
-            password: '',
-            remember: false,
-            errorMessage: ''
-        };
-    },
-    setup() {
-        const router = useRouter();
-        return { router };
-    },
-    methods: {
-        async login() {
-            try {
-                const response = await apiClient.post('login', {
-                    email: this.email,
-                    password: this.password,
-                    remember: this.remember
-                });
-                console.log(response.data);
-                // Handle successful login
-                localStorage.setItem('token', response.data.token);
-                this.router.push('/dashboard'); // Redirect to the dashboard or desired route
-            } catch (error) {
-                this.errorMessage = error.response?.data?.message || 'An error occurred';
-            }
-        }
+const router = useRouter();
+const loading = ref(false);
+const errorMsg = ref('');
+
+const form = ref({
+    email: '',
+    password: '',
+    remember: false
+});
+
+const login = async () => {
+    loading.value = true;
+    try {
+        await store.dispatch('login', form.value);
+        router.push({name: 'dashboard'});
+    } catch ({response}) {
+        errorMsg.value = response.data.message;
+    } finally {
+        loading.value = false;
     }
 };
 </script>
 
 <style scoped>
-h2 {
-    color: #333;
-}
+/* Add any additional styling here if needed */
 </style>

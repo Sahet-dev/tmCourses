@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -11,33 +14,42 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
-            'remember' => ['boolean']
+            'password' => 'required',
+            'remember' => 'boolean'
         ]);
+
         $remember = $credentials['remember'] ?? false;
         unset($credentials['remember']);
+
+
         if (!Auth::attempt($credentials, $remember)) {
-            return response(['message' => 'Invalid email or password'], 422);
+            $request->session()->regenerate();
+            return response(['message' => 'Email or password is incorrect'], 422);
         }
-        /** @var \App\Models\User $user */
+
+        /** @var User $user */
         $user = Auth::user();
-        if ($user->role !== 'admin' && $user->role !== 'moderator' && $user->role !== 'teacher') {
-            Auth::logout();
-            return response(['message' => 'No access! You must be an admin, moderator, or teacher'], 403);
-        }
+
+//        if(!$user->is_admin){
+//            Auth::logout();
+//            return response(['message' => 'You must be an admin to login'], 403);
+//        }
         $token = $user->createToken('main')->plainTextToken;
         return response([
-            'user' => $user,
-            'token' => $token
-        ]);
+            'user' => new UserResource($user),
+            'token' => $token]);
     }
 
-
-    public function logout()
+    public function logout(): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $user->currentAccessToken()->delete();
         return response('', 204);
+    }
+
+    public function getUser(Request $request): UserResource
+    {
+        return new UserResource($request->user());
     }
 }

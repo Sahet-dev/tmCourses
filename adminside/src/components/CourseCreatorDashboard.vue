@@ -1,75 +1,42 @@
 <template>
-    <div class="flex h-screen bg-gray-100">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-md">
-            <div class="p-4">
-                <h2 class="text-xl font-semibold">Admin Dashboard</h2>
-                <ul class="mt-6">
-                    <li><router-link to="/dashboard" class="block px-4 py-2 hover:bg-gray-200">Home</router-link></li>
-                    <li><router-link to="/courses" class="block px-4 py-2 hover:bg-gray-200">Courses</router-link></li>
-                    <li><router-link to="/profile" class="block px-4 py-2 hover:bg-gray-200">Profile</router-link></li>
-                    <li><button @click="logout" class="block px-4 py-2 w-full text-left hover:bg-gray-200">Logout</button></li>
-                </ul>
-            </div>
-        </aside>
+    <div>
+        <h1 class="text-2xl font-bold mb-4">Course Creator Dashboard</h1>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6">
-            <header class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-semibold">Welcome, {{ user.name }}</h1>
-            </header>
-            <div>
-                <!-- Your dashboard content goes here -->
-                <p>Dashboard content...</p>
-            </div>
-        </main>
+        <!-- Course Creation Form -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Create a New Course</h2>
+            <CourseCreationForm />
+        </div>
+
+        <!-- Lesson Management Form -->
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-2">Manage Lessons</h2>
+            <!-- Assuming you have a list of courses available as `courses` -->
+            <LessonManagementForm :course-id="selectedCourseId" />
+        </div>
     </div>
 </template>
 
-<script>
-import apiClient from '../api/axios';
-import { ref, onMounted } from 'vue';
+<script setup>
+import {ref} from 'vue';
+import CourseCreationForm from "./Course/CourseCreationForm.vue";
+import LessonManagementForm from './Course/LessonManagementForm.vue';
 
-export default {
-    data() {
-        return {
-            user: {
-                name: ''
-            }
-        };
-    },
-    methods: {
-        async fetchUser() {
-            try {
-                const response = await apiClient.get('/user'); // Adjust endpoint if needed
-                this.user = response.data;
-            } catch (error) {
-                console.error('Failed to fetch user data:', error);
-                this.$router.push('/login'); // Redirect to login if fetching user fails
-            }
-        },
-        async logout() {
-            try {
-                await apiClient.post('/logout');
-                localStorage.removeItem('token');
-                this.$router.push('/login');
-            } catch (error) {
-                console.error('Failed to logout:', error);
-            }
-        }
-    },
-    onMounted() {
-        this.fetchUser();
+// You might have a list of courses and a way to select one
+const selectedCourseId = ref(null); // This should be dynamically set based on user selection
+
+// Example data fetching function (assuming you have courses data)
+const fetchCourses = async () => {
+    try {
+        // Fetch courses data here and update `courses` data
+    } catch (error) {
+        console.error('Failed to fetch courses:', error);
     }
 };
+
+// Call fetchCourses() or other setup logic as needed
 </script>
 
 <style scoped>
-aside {
-    min-width: 16rem;
-}
-
-header {
-    border-bottom: 1px solid #e5e7eb;
-}
+/* Dashboard styles */
 </style>

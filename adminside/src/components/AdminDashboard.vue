@@ -1,28 +1,17 @@
 <template>
     <div>
-        <DashboardHeader :user="user" />
-        <div>
-            <h2 class="text-xl font-semibold">Admin Dashboard</h2>
-            <!-- Admin-specific content -->
-            <p>Admin content goes here.</p>
-        </div>
+        <h2>Admin Dashboard</h2>
+        <!-- Admin-specific content -->
+        <p>Welcome, Admin! Manage the courses and users from here.</p>
     </div>
 </template>
 
 <script>
-import DashboardHeader from './DashboardHeader.vue';
-
 export default {
-    components: {
-        DashboardHeader
-    },
-    data() {
-        return {
-            user: {}
-        };
-    },
-    async created() {
-        // Fetch user data or any required data
-    }
+    name: 'AdminDashboard'
 };
 </script>
+
+<style scoped>
+/* Admin-specific styles */
+</style>

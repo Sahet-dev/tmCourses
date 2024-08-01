@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class Admin
@@ -18,6 +19,10 @@ class Admin
     {
         if (Auth::check() && Auth::user()->role === 'admin') {
             return $next($request);
+        }
+        if (!Auth::check()) {
+            Log::warning('Unauthenticated access attempt', ['request' => $request->all()]);
+            return response()->json(['message' => 'Forbidden'], 403);
         }
         return response([
             'message' => 'No access! You must be an admin.'
