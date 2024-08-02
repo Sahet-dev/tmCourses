@@ -59,9 +59,9 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
-import store from '../store/index.js';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import apiClient from "../api/axios.js";
 
 const router = useRouter();
 const loading = ref(false);
@@ -74,12 +74,19 @@ const form = ref({
 });
 
 const login = async () => {
-    loading.value = true;
     try {
-        await store.dispatch('login', form.value);
-        router.push({name: 'dashboard'});
-    } catch ({response}) {
-        errorMsg.value = response.data.message;
+        loading.value = true;
+        const response = await apiClient.post('/login', form.value); // Send form data
+        localStorage.setItem('token', response.data.token); // Save token to localStorage
+        console.log('Token saved:', response.data.token);
+        router.push('/dashboard'); // Redirect after login
+    } catch (error) {
+        console.error('Login failed:', error);
+        if (error.response && error.response.status === 422) {
+            errorMsg.value = error.response.data.message || 'Validation failed.';
+        } else {
+            errorMsg.value = 'Login failed.';
+        }
     } finally {
         loading.value = false;
     }

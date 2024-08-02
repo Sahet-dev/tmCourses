@@ -31,23 +31,23 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-    const token = localStorage.getItem('token');
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!token) {
-            next('/login');
-        } else {
-            try {
-                await apiClient.get('/user'); // Verify token
-                next();
-            } catch (error) {
-                localStorage.removeItem('token');
-                next('/login');
-            }
-        }
-    } else {
-        next();
-    }
-});
+// router.beforeEach(async (to, from, next) => {
+//     const token = localStorage.getItem('token');
+//     if (to.matched.some(record => record.meta.requiresAuth)) {
+//         if (!token) {
+//             next('/login');
+//         } else {
+//             try {
+//                 await apiClient.get('/user'); // Verify token
+//                 next();
+//             } catch (error) {
+//                 localStorage.removeItem('token');
+//                 next('/login');
+//             }
+//         }
+//     } else {
+//         next();
+//     }
+// });
 
 export default router;
