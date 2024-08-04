@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul class="space-y-2">
+        <ul class="space-y-2" id="list">
             <li>
                 <router-link
                     to="/moderator-dashboard"
@@ -68,4 +68,9 @@ export default {
 
 <style scoped>
 /* Scoped styles if needed */
+#list a.router-link-exact-active {
+    color: #5daeec;
+    text-decoration-line: underline
+}
+
 </style>

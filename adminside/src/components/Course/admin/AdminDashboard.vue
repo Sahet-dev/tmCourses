@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-screen">
+    <div class="flex h-screen overflow-y-auto">
         <!-- Sidebar -->
         <aside class="w-54 h-full bg-blue-50 border-r border-gray-200 p-4 overflow-y-auto">
             <AdminSidebarList role="teacher"/>

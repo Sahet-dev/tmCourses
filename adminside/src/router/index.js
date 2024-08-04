@@ -31,6 +31,9 @@ import ModeratorDashboard from '../components/Course/moderator/ModeratorDashboar
 import ContentModeration from '../components/Course/moderator/ContentModeration.vue';
 import UserReviews from '../components/Course/moderator/UserReviews.vue';
 import Reports from '../components/Course/moderator/Reports.vue';
+import Courses from "../views/Courses.vue";
+import CourseCreationForm from "../components/Course/CourseCreationForm.vue";
+import AddLesson from "../components/Course/AddLesson.vue";
 
 const routes = [
     // Teacher routes
@@ -63,14 +66,15 @@ const routes = [
         path: '/admin-dashboard',
         component: Dashboard,
         children: [
-            { path: '', component: UserManagement },
+            { path: '', component: Courses },
             { path: 'user-management', component: UserManagement },
             { path: 'content-management', component: ContentManagement },
             { path: 'site-settings', component: SiteSettings },
             { path: 'analytics', component: Analytics },
             { path: 'support', component: SupportAdmin },
-            { path: 'security', component: Security },
             { path: 'customization', component: Customization },
+            { path: 'new-course', component: CourseCreationForm },
+            { path: '/course/:id/add-lesson', component: AddLesson, props: true },
         ]
     },
 

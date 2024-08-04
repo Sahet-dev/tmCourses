@@ -1,15 +1,7 @@
 <template>
     <div>
-        <ul class="space-y-2">
-            <li>
-                <router-link
-                    to="/admin-dashboard"
-                    class="block p-3 rounded-md border border-transparent text-gray-700
-          hover:bg-blue-100 hover:border-blue-300 hover:text-blue-900 transition-all duration-300"
-                >
-                    Admin Dashboard Home
-                </router-link>
-            </li>
+        <ul class="space-y-2" id="list">
+
             <li>
                 <router-link
                     to="/admin-dashboard/user-management"
@@ -28,15 +20,7 @@
                     Content Management
                 </router-link>
             </li>
-            <li>
-                <router-link
-                    to="/admin-dashboard/site-settings"
-                    class="block p-3 rounded-md border border-transparent text-gray-700
-          hover:bg-blue-100 hover:border-blue-300 hover:text-blue-900 transition-all duration-300"
-                >
-                    Site Settings
-                </router-link>
-            </li>
+
             <li>
                 <router-link
                     to="/admin-dashboard/analytics"
@@ -73,6 +57,15 @@
                     Customization
                 </router-link>
             </li>
+            <li>
+                <router-link
+                    to="/admin-dashboard/new-course"
+                    class="block p-3 rounded-md border border-transparent text-gray-700
+          hover:bg-blue-100 hover:border-blue-300 hover:text-blue-900 transition-all duration-300"
+                >
+                    Create Course
+                </router-link>
+            </li>
         </ul>
     </div>
 </template>
@@ -86,4 +79,8 @@ export default {
 
 <style scoped>
 /* Scoped styles if needed */
+#list a.router-link-exact-active {
+    color: #5daeec;
+    text-decoration-line: underline
+}
 </style>

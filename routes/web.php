@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/courses/{id}', function ($id) {
+Route::get('/cosurses/{id}', function ($id) {
     return Inertia::render('CourseDetail', ['courseId' => $id]);
 })->name('courseDetail');;
 

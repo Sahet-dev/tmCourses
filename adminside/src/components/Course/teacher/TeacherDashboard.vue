@@ -6,7 +6,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-6 overflow-y-auto">
             <router-view />
         </main>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul v-if="role === 'teacher'" class="space-y-2">
+        <ul v-if="role === 'teacher'" class="space-y-2" id="list">
             <li>
                 <router-link
                     to="/teacher-dashboard"
@@ -102,4 +102,8 @@ export default {
 
 <style scoped>
 /* Scoped styles if needed */
+#list a.router-link-exact-active {
+    color: #5daeec;
+    text-decoration-line: underline
+}
 </style>

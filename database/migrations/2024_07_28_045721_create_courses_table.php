@@ -17,9 +17,12 @@ return new class extends Migration
             $table->text('description');
             $table->string('thumbnail');
             $table->decimal('price', 8, 2);
+            $table->unsignedBigInteger('teacher_id'); // Add the teacher_id column
             $table->timestamps();
-        });
 
+            // Add the foreign key constraint
+            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
+        });
     }
 
     /**
