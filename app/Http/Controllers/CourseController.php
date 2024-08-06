@@ -48,9 +48,10 @@ class CourseController extends Controller
             'description' => 'required|string',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'price' => 'required|numeric',
-            'lesson_title' => 'required|string|max:255',
-            'lesson_video_url' => 'required|url',
-            'lesson_markdown_text' => 'required|string',
+            'lessons' => 'required|array',
+            'lessons.*.title' => 'required|string|max:255',
+            'lessons.*.video_url' => 'required|file|mimetypes:video/mp4,video/x-m4v,video/*',
+            'lessons.*.markdown_text' => 'required|string',
         ]);
 
         // Handle thumbnail upload
@@ -65,13 +66,17 @@ class CourseController extends Controller
             'teacher_id' => auth()->id(),
         ]);
 
-        // Create the first lesson
-        Lesson::create([
-            'course_id' => $course->id,
-            'title' => $request->lesson_title,
-            'video_url' => $request->lesson_video_url,
-            'markdown_text' => $request->lesson_markdown_text,
-        ]);
+        // Create the lessons
+        foreach ($request->lessons as $lesson) {
+            $videoPath = $lesson['video_url']->store('videos', 'public');
+
+            Lesson::create([
+                'course_id' => $course->id,
+                'title' => $lesson['title'],
+                'video_url' => $videoPath,
+                'markdown_text' => $lesson['markdown_text'],
+            ]);
+        }
 
         return response()->json(['id' => $course->id], 201);
     }
