@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CourseResource;
 use App\Http\Resources\LessonResource;
+use App\Models\Course;
 use App\Models\Lesson;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -30,4 +33,19 @@ class LessonController extends Controller
 
         return new LessonResource($lesson);
     }
+
+    public function getLessons($courseId): JsonResponse
+    {
+        $course = Course::with('lessons')->find($courseId);
+
+        if (!$course) {
+            return response()->json(['message' => 'Course not found'], 404);
+        }
+
+        return response()->json([
+            'course' => new CourseResource($course),
+            'lessons' => LessonResource::collection($course->lessons)
+        ], 200);
+    }
+
 }

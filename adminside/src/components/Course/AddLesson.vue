@@ -4,7 +4,7 @@
         <div class="mb-6 flex items-center space-x-4">
             <img
                 v-if="course.thumbnail"
-                :src="course.thumbnail"
+                :src="thumbnailUrl"
                 alt="Course Thumbnail"
                 class="w-24 h-24 object-cover rounded-md shadow-sm"
             />
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import apiClient from "../../api/axios.js"; // Adjust path if needed
 
@@ -100,6 +100,9 @@ onMounted(async () => {
         const courseResponse = await apiClient.get(`/courses/${courseId}`);
         course.value = courseResponse.data;
 
+        // Log the fetched course details to debug
+        console.log('Course details:', course.value);
+
         // Fetch existing lessons
         const lessonsResponse = await apiClient.get(`/courses/${courseId}/lessons`);
         lessons.value = lessonsResponse.data;
@@ -108,6 +111,29 @@ onMounted(async () => {
         error.value = 'Failed to fetch course or lessons.';
     }
 });
+
+const thumbnailUrl = computed(() => {
+    console.log('Thumbnail path:', course.value.thumbnail);
+    return course.value.thumbnail
+        ? `http://localhost:8000/storage/thumbnails/${course.value.thumbnail}`
+        : '';
+
+});
+
+
+// Computed property for the thumbnail URL
+// const thumbnailUrl = computed(() => {
+//     if (course.value.thumbnail) {
+//         const baseUrl = import.meta.env.VITE_APP_URL;
+//         console.log('Base URL:', baseUrl);
+//         console.log('Thumbnail path:', course.value.thumbnail);
+//         return `${baseUrl}/storage/thumbnails/${course.value.thumbnail}`;
+//     }
+//     return '';
+// });
+
+// Log thumbnail URL to verify
+console.log(thumbnailUrl.value);
 
 const addLesson = async () => {
     try {

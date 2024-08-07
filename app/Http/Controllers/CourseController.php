@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CourseResource;
+use App\Http\Resources\LessonResource;
 use App\Http\Resources\UserResource;
 use App\Models\Course;
 use App\Models\Lesson;
@@ -92,6 +93,20 @@ class CourseController extends Controller
     public function destroy($id)
     {
         // Delete logic
+    }
+
+    public function getLessons($courseId): JsonResponse
+    {
+        $course = Course::with('lessons')->find($courseId);
+
+        if (!$course) {
+            return response()->json(['message' => 'Course not found'], 404);
+        }
+
+        return response()->json([
+            'course' => new CourseResource($course),
+            'lessons' => LessonResource::collection($course->lessons)
+        ], 200);
     }
 }
 

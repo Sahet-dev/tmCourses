@@ -74,7 +74,7 @@ const course = ref({
     thumbnail: null,
     price: 0
 });
-const lessons = ref([{ title: '', video_url: '', markdown_text: '' }]);
+const lessons = ref([{ title: '', video_url: null, markdown_text: '' }]);
 const existingLessons = ref([]);
 const error = ref('');
 const errorMessage = ref('');
@@ -95,16 +95,12 @@ const handleFileUpload = (event) => {
 const handleVideoUpload = (event, index) => {
     const file = event.target.files[0];
     if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            lessons.value[index].video_url = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        lessons.value[index].video_url = file; // Store the file object directly
     }
 };
 
 const addLesson = () => {
-    lessons.value.push({ title: '', video_url: '', markdown_text: '' });
+    lessons.value.push({ title: '', video_url: null, markdown_text: '' });
 };
 
 const createCourseAndAddLesson = async () => {
@@ -117,7 +113,7 @@ const createCourseAndAddLesson = async () => {
     // Append lesson data
     lessons.value.forEach((lesson, index) => {
         formData.append(`lessons[${index}][title]`, lesson.title);
-        formData.append(`lessons[${index}][video_url]`, lesson.video_url);
+        formData.append(`lessons[${index}][video_url]`, lesson.video_url); // Append the file object
         formData.append(`lessons[${index}][markdown_text]`, lesson.markdown_text);
     });
 
@@ -128,7 +124,7 @@ const createCourseAndAddLesson = async () => {
             },
         });
         course.value = { title: '', description: '', thumbnail: null, price: 0 }; // Clear form
-        lessons.value = [{ title: '', video_url: '', markdown_text: '' }]; // Clear lesson form
+        lessons.value = [{ title: '', video_url: null, markdown_text: '' }]; // Clear lesson form
         thumbnailPreview.value = null; // Clear thumbnail preview
         errorMessage.value = '';
 

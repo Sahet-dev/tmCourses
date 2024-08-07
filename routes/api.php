@@ -12,8 +12,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/teacher/courses', [CourseController::class, 'index']);
     Route::middleware('role:admin')->group(function () {
-        Route::post('/courses/{course}/lessons', [LessonController::class, 'store']);
+        Route::get('/courses/{course}/lessons', [LessonController::class, 'getLessons']);
         Route::get('/users', [UserController::class, 'index']);
+//        Route::get('courses/{course}/lessons', [CourseController::class, 'getLessons']);
         Route::post('/users', [UserController::class, 'store']);
         Route::get('/users/{id}', [UserController::class, 'show']);
         Route::put('/users/{id}', [UserController::class, 'update']);
