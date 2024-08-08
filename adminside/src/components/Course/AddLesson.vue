@@ -77,6 +77,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import apiClient from "../../api/axios.js"; // Adjust path if needed
+import Ckeditor from '../Ceditor.vue';
 
 const route = useRoute(); // Access route parameters
 const courseId = route.params.id; // Get course ID from route

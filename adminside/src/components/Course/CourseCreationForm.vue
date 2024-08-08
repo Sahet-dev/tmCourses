@@ -34,7 +34,13 @@
                 </div>
                 <div class="mb-4">
                     <label :for="'markdown_text' + index" class="block text-lg font-medium text-gray-700">Markdown Text</label>
-                    <textarea v-model="lesson.markdown_text" :id="'markdown_text' + index" rows="4" class="w-full px-3 py-2 border rounded-md" required></textarea>
+                    <textarea v-model="lesson.markdown_text" :id="'markdown_text' + index" rows="4" class="w-full px-3 py-2 border rounded-md"
+                              required></textarea>
+                    <ckeditor
+                        v-model="lesson.markdown_text"
+                        :editor="editor"
+                        :config="editorConfig"
+                    />
                 </div>
             </div>
             <button type="button" @click="addLesson" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md shadow-sm hover:bg-gray-300 mb-4">+ Add Another Lesson</button>
@@ -66,6 +72,17 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from "../../api/axios.js"; // Adjust path if needed
+import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Link, } from 'ckeditor5';
+// import { SlashCommand } from 'ckeditor5-premium-features';
+import 'ckeditor5/ckeditor5.css';
+// import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
+
+const editor = ClassicEditor;
+const editorData = ref('<p>Hello from CKEditor 5 in Vue!</p>');
+const editorConfig = {
+    plugins: [ Bold, Essentials, Italic, Mention, Paragraph, Undo, Link ],
+    toolbar: [ 'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'numberedList', '|', 'outdent', 'indent', '|', 'bulletList', '|', 'blockQuote'],
+};
 
 const router = useRouter();
 const course = ref({

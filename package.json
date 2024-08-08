@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^5.1.1",
+        "ckeditor5": "^43.0.0",
         "vue": "^3.4.34",
         "vue-router": "^4.4.0"
     }
