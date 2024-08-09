@@ -21,7 +21,7 @@
                     <td class="border border-gray-300 p-2">{{ course.title }}</td>
                     <td class="border border-gray-300 p-2">${{ course.price }}</td>
                     <td class="border border-gray-300 p-2 flex space-x-2">
-                        <button @click="editCourse(course)" class="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition-all duration-300">
+                        <button @click="editCourse(course.id)" class="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition-all duration-300">
                             Edit
                         </button>
                         <button @click="deleteCourse(course.id)" class="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 transition-all duration-300">
@@ -40,9 +40,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import apiClient from "../../../api/axios.js";
+import { useRouter } from 'vue-router';
 
 const courses = ref([]);
-
+const router = useRouter();
 const fetchCourses = async () => {
     try {
         const response = await apiClient.get('/teacher/courses');
@@ -65,7 +66,7 @@ const closeModal = () => {
 
 const addCourse = async () => {
     try {
-        await axios.post('/api/courses', form.value);
+        await axios.post('/courses', form.value);
         await fetchCourses();
         closeModal();
     } catch (error) {
@@ -73,15 +74,14 @@ const addCourse = async () => {
     }
 };
 
-const editCourse = (course) => {
-    form.value = {...course};
-    isEditing.value = true;
-    showModal.value = true;
+const editCourse = (courseId) => {
+    // Use your router to navigate to the update page, passing the course ID
+    router.push({ name: 'CourseUpdate', params: { id: courseId } });
 };
 
 const updateCourse = async () => {
     try {
-        await axios.put(`/api/courses/${form.value.id}`, form.value);
+        await axios.put(`/courses/${form.value.id}`, form.value);
         await fetchCourses();
         closeModal();
     } catch (error) {

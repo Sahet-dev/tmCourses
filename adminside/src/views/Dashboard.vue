@@ -7,12 +7,13 @@
         <div class="flex">
             <main class="flex-1">
 
-                <div class="text-red-500 text-center">You have {{ user.role}} role</div>
 
                 <AdminDashboard v-if="user.role === 'admin'" />
                 <TeacherDashboard v-if="user.role === 'teacher'" />
                 <ModeratorDashboard v-if="user.role === 'moderator'" />
                 <div class="text-red-500" v-if="errorMessage">{{ errorMessage }}</div>
+
+
             </main>
 
         </div>
