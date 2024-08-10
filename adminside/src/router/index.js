@@ -34,6 +34,7 @@ import Reports from '../components/Course/moderator/Reports.vue';
 import Courses from "../views/Courses.vue";
 import CourseCreationForm from "../components/Course/CourseCreationForm.vue";
 import AddLesson from "../components/Course/AddLesson.vue";
+import CourseUpdateForm from "../components/Course/CourseUpdateForm.vue";
 
 const routes = [
     // Teacher routes
@@ -90,6 +91,11 @@ const routes = [
             { path: 'notifications', component: Notifications },
             { path: 'support', component: Support },
         ]
+    },
+    {
+        path: '/courses/:id/edit',
+        name: 'CourseUpdate',
+        component: CourseUpdateForm, // Replace with your actual component
     },
 
     // Redirect or catch-all route

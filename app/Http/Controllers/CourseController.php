@@ -11,8 +11,10 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,13 +29,16 @@ class CourseController extends Controller
 
     public function show($id): JsonResponse
     {
-        $course = Course::find($id);
+        $course = Course::with('lessons')->find($id);
 
         if (!$course) {
             return response()->json(['message' => 'Course not found'], 404);
         }
 
-        return response()->json($course, 200);
+        return response()->json([
+            'course' => $course,
+            'lessons' => $course->lessons
+        ]);
     }
 
     // API methods for admin
@@ -87,8 +92,54 @@ class CourseController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Update logic
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'lessons.*.title' => 'required|string',
+            'lessons.*.markdown_text' => 'nullable|string',
+            'lessons.*.video_url' => 'nullable|file|mimes:mp4,m4v,avi,mkv',
+        ]);
+
+        $course = Course::find($id);
+        $course->title = $request->input('title');
+        $course->description = $request->input('description');
+        $course->price = $request->input('price');
+
+        // Handle thumbnail update
+        if ($request->hasFile('thumbnail')) {
+            $course->thumbnail = $request->file('thumbnail')->store('thumbnails');
+        }
+
+        $course->save();
+
+        // Handle lessons update
+        foreach ($request->input('lessons') as $index => $lessonData) {
+            $lesson = Lesson::find($lessonData['id']);
+
+            if ($lesson) {
+                $lesson->title = $lessonData['title'];
+                $lesson->markdown_text = $lessonData['markdown_text'];
+
+                // Handle video update
+                if ($request->hasFile("lessons.{$index}.video_url")) {
+                    $lesson->video_url = $request->file("lessons.{$index}.video_url")->store('videos');
+                }
+
+                $lesson->save();
+            }
+        }
+
+        return response()->json(['message' => 'Course and lessons updated successfully.']);
     }
+
+
+
+
+
+
+
 
     public function destroy($id)
     {
