@@ -21,6 +21,9 @@
                     <td class="border border-gray-300 p-2">{{ course.title }}</td>
                     <td class="border border-gray-300 p-2">${{ course.price }}</td>
                     <td class="border border-gray-300 p-2 flex space-x-2">
+                        <button @click="previewCourse(course.id)" class="bg-teal-500 text-white py-1 px-3 rounded-md hover:bg-teal-600 transition-all duration-300">
+                            Preview
+                        </button>
                         <button @click="editCourse(course.id)" class="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition-all duration-300">
                             Edit
                         </button>
@@ -74,27 +77,27 @@ const addCourse = async () => {
     }
 };
 
+const previewCourse = (courseId) => {
+    //
+}
+
+
 const editCourse = (courseId) => {
     // Use your router to navigate to the update page, passing the course ID
     router.push({ name: 'CourseUpdate', params: { id: courseId } });
 };
 
-const updateCourse = async () => {
-    try {
-        await axios.put(`/courses/${form.value.id}`, form.value);
-        await fetchCourses();
-        closeModal();
-    } catch (error) {
-        console.error('Failed to update course:', error);
-    }
-};
+
 
 const deleteCourse = async (id) => {
-    try {
-        await axios.delete(`/api/courses/${id}`);
-        await fetchCourses();
-    } catch (error) {
-        console.error('Failed to delete course:', error);
+    const confirmed = confirm("Are you sure you want to delete this course? This action cannot be undone.");
+    if (confirmed) {
+        try {
+            await apiClient.delete(`/courses/${id}`);
+            await fetchCourses(); // Refresh the list of courses
+        } catch (error) {
+            console.error('Failed to delete course:', error);
+        }
     }
 };
 

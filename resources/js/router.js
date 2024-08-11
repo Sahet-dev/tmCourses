@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import CourseCatalog from './Pages/CourseCatalog.vue';
-import CourseDetail from './Pages/CourseDetail.vue';
+import CourseCatalog from "@/Pages/CourseCatalog.vue";
+import CourseDetail from "@/Pages/CourseDetail.vue";
 
 const routes = [
     {

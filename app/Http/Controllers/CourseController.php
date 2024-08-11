@@ -143,8 +143,39 @@ class CourseController extends Controller
 
     public function destroy($id)
     {
-        // Delete logic
+        // Check if the user has one of the required roles
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Find the course by ID
+        $course = Course::find($id);
+
+        if (!$course) {
+            return response()->json(['message' => 'Course not found'], 404);
+        }
+
+        // Delete associated lessons
+        $lessons = $course->lessons;
+        foreach ($lessons as $lesson) {
+            // Optionally delete video files from storage
+            if (Storage::disk('public')->exists($lesson->video_url)) {
+                Storage::disk('public')->delete($lesson->video_url);
+            }
+            $lesson->delete();
+        }
+
+        // Optionally delete thumbnail file from storage
+        if (Storage::disk('public')->exists($course->thumbnail)) {
+            Storage::disk('public')->delete($course->thumbnail);
+        }
+
+        // Delete the course
+        $course->delete();
+
+        return response()->json(['message' => 'Course and associated lessons deleted successfully.']);
     }
+
 
     public function getLessons($courseId): JsonResponse
     {
