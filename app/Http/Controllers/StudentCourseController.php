@@ -16,7 +16,7 @@ class StudentCourseController extends Controller
      */
     public function show($id)
     {
-        $course = Course::with('lessons')->find($id);
+        $course = Course::find($id);
 
         if (!$course) {
             abort(404);

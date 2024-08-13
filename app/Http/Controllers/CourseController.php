@@ -176,19 +176,34 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course and associated lessons deleted successfully.']);
     }
 
+//
+//    public function getLessons($courseId): JsonResponse
+//    {
+//        $course = Course::with('lessons')->find($courseId);
+//dd($course);
+//        if (!$course) {
+//            return response()->json(['message' => 'Course not found'], 404);
+//        }
+//
+//        return response()->json([
+//            'course' => new CourseResource($course),
+//            'lessons' => LessonResource::collection($course->lessons)
+//        ], 200);
+//    }
+//
+//
+//    public function showCourse($id)
+//    {
+//        $course = Course::find($id);
+//
+//        if (!$course) {
+//            abort(404); // Return 404 if the course is not found
+//        }
+//
+//        return view('course_detail', ['course' => $course]);
+//    }
 
-    public function getLessons($courseId): JsonResponse
-    {
-        $course = Course::with('lessons')->find($courseId);
 
-        if (!$course) {
-            return response()->json(['message' => 'Course not found'], 404);
-        }
 
-        return response()->json([
-            'course' => new CourseResource($course),
-            'lessons' => LessonResource::collection($course->lessons)
-        ], 200);
-    }
 }
 

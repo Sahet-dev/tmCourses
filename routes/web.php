@@ -5,13 +5,14 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StudentCourseController;
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-//Route::get('/courses/{id}', function ($id) { return Inertia::render('CourseDetail', ['courseId' => $id]);
-//})->name('courseDetail');;
-Route::get('/courses/{id}', [StudentCourseController::class, 'show'])->name('courseDetail');
+Route::get('/courses/{id}', [HomeController::class, 'show'])->name('courseDetail');
+
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

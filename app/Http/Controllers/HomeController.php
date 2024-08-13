@@ -15,7 +15,7 @@ class HomeController
         ]);
     }
 
-    public function show($id)
+    public function show($id): \Inertia\Response
     {
         $course = Course::with('lessons')->findOrFail($id);
         return Inertia::render('CourseDetail', [
