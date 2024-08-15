@@ -31,7 +31,6 @@ const fetchUser = async () => {
     try {
         const response = await apiClient.get('/user');
         user.value = response.data;
-        console.log('Fetched user data:', user.value);
     } catch (error) {
         if (error.response?.status === 401) {
             // User is unauthorized, redirect to login page

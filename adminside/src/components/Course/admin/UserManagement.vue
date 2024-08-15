@@ -38,14 +38,7 @@
         </table>
         <div v-else class="text-center text-gray-500">No users found.</div>
 
-        <!-- Add/Edit User Modal -->
-        <ModalForm
-            :show="showModal"
-            :form="form"
-            :isEditing="isEditing"
-            @close="closeModal"
-            @submit="isEditing ? updateUser() : addUser()"
-        />
+
     </div>
 </template>
 
@@ -55,7 +48,6 @@ import { ref, onMounted } from 'vue';
 import apiClient from '../../../api/axios.js';
 import router from '../../../router'; // Import router if using Vue Router
 import axios from 'axios';
-import ModalForm from "../AddEditCourseModal.vue";
 
 const users = ref([]);
 const showModal = ref(false);

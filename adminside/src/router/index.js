@@ -33,8 +33,8 @@ import UserReviews from '../components/Course/moderator/UserReviews.vue';
 import Reports from '../components/Course/moderator/Reports.vue';
 import Courses from "../views/Courses.vue";
 import CourseCreationForm from "../components/Course/CourseCreationForm.vue";
-import AddLesson from "../components/Course/AddLesson.vue";
 import CourseUpdateForm from "../components/Course/CourseUpdateForm.vue";
+import CourseData from "../components/Course/CourseData.vue";
 
 const routes = [
     // Teacher routes
@@ -75,7 +75,6 @@ const routes = [
             { path: 'support', component: SupportAdmin },
             { path: 'customization', component: Customization },
             { path: 'new-course', component: CourseCreationForm },
-            { path: '/course/:id/add-lesson', component: AddLesson, props: true },
         ]
     },
 
@@ -95,7 +94,14 @@ const routes = [
     {
         path: '/courses/:id/edit',
         name: 'CourseUpdate',
-        component: CourseUpdateForm, // Replace with your actual component
+        component: CourseUpdateForm,
+        props: true,
+    },
+    {
+        path: '/courses/:id/data',
+        name: 'CourseData',
+        component: CourseData,
+        props: true,
     },
 
     // Redirect or catch-all route

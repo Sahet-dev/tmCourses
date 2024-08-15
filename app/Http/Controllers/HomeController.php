@@ -15,12 +15,27 @@ class HomeController
         ]);
     }
 
-    public function show($id): \Inertia\Response
+//    public function show($id): \Inertia\Response
+//    {
+//        $course = Course::with('lessons')->findOrFail($id);
+//        return Inertia::render('CourseDetail', [
+//            'course' => $course,
+//        ]);
+//    }
+
+
+
+    public function show($id)
     {
+        // Fetch the course with its lessons
         $course = Course::with('lessons')->findOrFail($id);
+
+        // Pass the course data to the Vue component
         return Inertia::render('CourseDetail', [
             'course' => $course,
         ]);
     }
+
+
 
 }

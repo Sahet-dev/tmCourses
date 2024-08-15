@@ -1,13 +1,11 @@
 <template>
     <div>
-        <h1>Courses</h1>
+        <h1>Kurslar bar, gapdaldaky yollanmalr bilen ishlan</h1>
         <div v-if="error">{{ error }}</div>
         <div v-if="courses.length > 0">
-            <div v-for="course in courses" :key="course.id" class="course-card">
-                <h2>{{ course.title }}</h2>
-                <p>{{ course.description }}</p>
-                <img :src="`/storage/${course.thumbnail}`" alt="Course Thumbnail" />
-                <p>Price: ${{ course.price }}</p>
+            <div>
+                <h2>{{ courses.title }}</h2>
+                <p>{{ courses.description }}</p>
             </div>
         </div>
 
