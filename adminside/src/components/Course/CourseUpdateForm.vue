@@ -1,74 +1,81 @@
 <template>
-    <DashboardHeader />
-    <transition
-        name="slide-fade"
-        @before-enter="beforeEnter"
-        @enter="enter"
-        @leave="leave"
-    >
-        <div
-            v-if="notification.visible"
-            class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded"
+    <div>
+        <DashboardHeader />
+        <transition
+            name="fade"
+
         >
-            {{ notification.message }}
-        </div>
-    </transition>
-    <div  v-bind="$attrs">
+            <div
+                v-if="notification.visible"
+                class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded"
+            >
+                {{ notification.message }}
+            </div>
+        </transition>
+        <div  v-bind="$attrs">
 
-        <div v-if="lessons.length" class="flex mx-auto p-6 bg-white rounded-md shadow-md">
-            <!-- Sidebar -->
-            <UpdateSidebar
-                :courseId="course?.id"
-                :lessons="lessons"
-                :selectedLesson="selectedLesson"
-                @update:selectedLesson="setSelectedLesson"
-                class="flex-shrink-0 mr-6"
-            />
+            <div v-if="lessons.length" class="flex mx-auto p-6 bg-white rounded-md shadow-md">
+                <!-- Sidebar -->
+                <UpdateSidebar
+                    :lessons="lessons"
+                    :selectedLesson="selectedLesson"
+                    @update:selectedLesson="setSelectedLesson"
+                    class="flex-shrink-0 mr-6"
+                />
 
-            <!-- Main Content -->
-            <div class="flex-grow">
-                <div v-if="selectedLesson !== null && lessons[selectedLesson]" class="mb-4">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Selected Lesson</h2>
+                <!-- Main Content -->
+                <div class="flex-grow">
+                    <button @click="editCourse(courseIds)"
+                            class=" w-full text-left px-2 py-1 rounded hover:bg-red-50 mb-4 hover:text-red-900">
+                        Edit Course Data
+                    </button>
+                    <div v-if="selectedLesson !== null && lessons[selectedLesson]" class="mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Selected Lesson</h2>
 
-                    <div class="mb-4 border-b border-gray-300 pb-4">
-                        <h3 class="text-lg font-medium text-gray-700 mb-2">Lesson {{ selectedLesson + 1 }}</h3>
-                        <div class="mb-4">
-                            <label for="lessonTitle" class="block text-lg font-medium text-gray-700">Lesson Title</label>
-                            <input v-model="lessons[selectedLesson].title" id="lessonTitle" type="text" class="w-full px-3 py-2 border rounded-md" />
-                        </div>
-                        <div class="mb-4">
-                            <label for="video_url" class="block text-lg font-medium text-gray-700">Video file</label>
-                            <input type="file" @change="handleFileChange" />
-                            <!-- Video Preview -->
-                            <video v-if="lessons[selectedLesson].videoPreview" :src="lessons[selectedLesson].videoPreview" controls class="mt-2 w-full max-w-xs"></video>
-                            <p v-if="lessons[selectedLesson].video_url && !lessons[selectedLesson].videoPreview" class="mt-2">{{ lessons[selectedLesson].video_url }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <label for="markdown_text" class="mt-6 block text-lg font-medium text-gray-700">Markdown Text</label>
-                            <ckeditor
-                                v-model="lessons[selectedLesson].markdown_text"
-                                :editor="editor"
-                                :config="editorConfig"
-                                readonly
-                            />
+                        <div class="mb-4 border-b border-gray-300 pb-4">
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Lesson {{ selectedLesson + 1 }}</h3>
+                            <div class="mb-4">
+                                <label for="lessonTitle" class="block text-lg font-medium text-gray-700">Lesson Title</label>
+                                <input v-model="lessons[selectedLesson].title" id="lessonTitle" type="text" class="w-full px-3 py-2 border rounded-md" />
+                            </div>
+                            <div class="mb-4">
+                                <label for="video_url" class="block text-lg font-medium text-gray-700">Video file</label>
+                                <input type="file" @change="handleFileChange" />
+                                <!-- Video Preview -->
+                                <video v-if="lessons[selectedLesson].videoPreview" :src="lessons[selectedLesson].videoPreview" controls class="mt-2 w-full max-w-xs"></video>
+                                <p v-if="lessons[selectedLesson].video_url && !lessons[selectedLesson].videoPreview" class="mt-2">{{ lessons[selectedLesson].video_url }}</p>
+                            </div>
+                            <div class="mb-4">
+                                <label for="markdown_text" class="mt-6 block text-lg font-medium text-gray-700">Markdown Text</label>
+                                <ckeditor
+                                    v-model="lessons[selectedLesson].markdown_text"
+                                    :editor="editor"
+                                    :config="editorConfig"
+                                    readonly
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <button @click="updateLesson" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
+                    <button @click="updateLesson" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
 
-                <!-- Error Message -->
-                <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
+                    <!-- Error Message -->
+                    <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
+                </div>
+            </div>
+            <div v-else-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
+            <div v-else class=" items-center justify-center flex text-center pt-6">
+                <Loader  />
+
             </div>
         </div>
-        <div v-else-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
-        <div v-else class="text-gray-500">Loading lessons...</div>
     </div>
+
 
 </template>
 
 <script setup>
 import {ref, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import apiClient from "../../api/axios.js";
 import UpdateSidebar from "./UpdateSidebar.vue";
 import DashboardHeader from "../DashboardHeader.vue";
@@ -92,6 +99,7 @@ import {
     IndentBlock
 } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
+import Loader from "./Loader.vue";
 
 const editor = ClassicEditor;
 const editorConfig = {
@@ -112,8 +120,10 @@ const editorConfig = {
 };
 
 const route = useRoute();
+const router = useRouter();
 
-const course = ref({id: null}); // Initialize with default values
+
+const courses = ref({id: null}); // Initialize with default values
 const lessons = ref([]);
 const selectedLesson = ref(null);
 const errorMessage = ref('');
@@ -143,21 +153,23 @@ const setSelectedLesson = (index) => {
     selectedLesson.value = index;
 };
 
-const handleFileChange = async (event) => {
+const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-        // Handle file upload logic if needed
-        console.log('Selected file:', file);
+        lessons.value[selectedLesson.value].videoFile = file;
+        lessons.value[selectedLesson.value].videoPreview = URL.createObjectURL(file);
     }
 };
+
 function showNotification(message) {
     notification.value.message = message;
     notification.value.visible = true;
 
     setTimeout(() => {
         notification.value.visible = false;
-    }, 6000); // Notification disappears after 2 seconds
+    }, 3000);
 }
+
 const updateLesson = async () => {
     try {
         if (selectedLesson.value === null || lessons.value.length === 0) {
@@ -173,13 +185,26 @@ const updateLesson = async () => {
             return;
         }
 
-        // Prepare data to send
-        const data = {
-            title: lesson.title,
-        };
+        // Prepare FormData to send
+        const formData = new FormData();
+        formData.append('title', lesson.title);
+        formData.append('markdown_text', lesson.markdown_text);
 
-        // Make the PUT request
-        const response = await apiClient.put(`/lessons/${lesson.id}`, data);
+        if (lesson.videoFile) {
+            formData.append('video_url', lesson.videoFile);
+        }
+
+        console.log("FormData contents:");
+        formData.forEach((value, key) => {
+            console.log(`${key}:`, value);
+        });
+        console.log('Title: ',lesson.value.title)
+
+        // Send PUT request
+        formData.append('_method', 'PUT');
+        const response = await apiClient.post(`/courses/${lessons.value.id}`, formData);
+
+
         showNotification('Lesson updated successfully!');
         console.log('Lesson updated successfully:', response.data);
 
@@ -193,13 +218,25 @@ const updateLesson = async () => {
         }
     }
 };
+;
+
+
+
 const fetchCourses = async () => {
+    const courseId = route.params.id; // Retrieve the ID from route params
     try {
-        const response = await apiClient.get('/teacher/courses');
-        courses.value = response.data.data; // Now courses is defined
+        const response = await apiClient.get(`/courses/${courseId}`);
+        courses.value = response.data.course;
     } catch (error) {
-        console.error('Failed to fetch courses:', error);
+        errorMessage.value = 'Failed to load course data.';
     }
+};
+
+
+const editCourse = () => {
+    const courseId = route.params.id;
+    // Use your router to navigate to the update page, passing the course ID
+    router.push({ name: 'CourseData', params: { id: courseId } });
 };
 onMounted(() => {
     const courseId = route.params.id;
@@ -209,13 +246,30 @@ onMounted(() => {
 });
 fetchCourses();
 </script>
+
+
 <style>
-/* Transition classes */
-.fade-enter-active, .fade-leave-active {
-    @apply transition-opacity duration-500;
+.fade-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.fade-enter-to{
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    @apply opacity-0;
+.fade-enter-active {
+    transition: all 0.3s ease;
+}
+.fade-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.fade-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.fade-leave-active  {
+    transition: all 0.3s ease;
 }
 </style>

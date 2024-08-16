@@ -63,19 +63,8 @@ const showAddCourseModal = () => {
     showModal.value = true;
 };
 
-const closeModal = () => {
-    showModal.value = false;
-};
 
-const addCourse = async () => {
-    try {
-        await axios.post('/courses', form.value);
-        await fetchCourses();
-        closeModal();
-    } catch (error) {
-        console.error('Failed to add course:', error);
-    }
-};
+
 
 const previewCourse = (courseId) => {
     //
