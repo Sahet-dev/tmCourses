@@ -89,20 +89,24 @@ class CourseController extends Controller
 
 
 
-
     public function update(Request $request, $id)
     {
+        Log::info('Update Request Data:', $request->all());
+        // Validate the input fields
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'lessons.*.title' => 'required|string',
-            'lessons.*.markdown_text' => 'nullable|string',
-            'lessons.*.video_url' => 'nullable|file|mimes:mp4,m4v,avi,mkv',
         ]);
 
+        // Find the course by ID
         $course = Course::find($id);
+        if (!$course) {
+            return response()->json(['message' => 'Course not found.'], 404);
+        }
+
+        // Update course fields
         $course->title = $request->input('title');
         $course->description = $request->input('description');
         $course->price = $request->input('price');
@@ -112,27 +116,12 @@ class CourseController extends Controller
             $course->thumbnail = $request->file('thumbnail')->store('thumbnails');
         }
 
+        // Save the updated course
         $course->save();
 
-        // Handle lessons update
-        foreach ($request->input('lessons') as $index => $lessonData) {
-            $lesson = Lesson::find($lessonData['id']);
-
-            if ($lesson) {
-                $lesson->title = $lessonData['title'];
-                $lesson->markdown_text = $lessonData['markdown_text'];
-
-                // Handle video update
-                if ($request->hasFile("lessons.{$index}.video_url")) {
-                    $lesson->video_url = $request->file("lessons.{$index}.video_url")->store('videos');
-                }
-
-                $lesson->save();
-            }
-        }
-
-        return response()->json(['message' => 'Course and lessons updated successfully.']);
+        return response()->json(['message' => 'Course updated successfully.']);
     }
+
 
 
 
@@ -176,32 +165,6 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course and associated lessons deleted successfully.']);
     }
 
-//
-//    public function getLessons($courseId): JsonResponse
-//    {
-//        $course = Course::with('lessons')->find($courseId);
-//dd($course);
-//        if (!$course) {
-//            return response()->json(['message' => 'Course not found'], 404);
-//        }
-//
-//        return response()->json([
-//            'course' => new CourseResource($course),
-//            'lessons' => LessonResource::collection($course->lessons)
-//        ], 200);
-//    }
-//
-//
-//    public function showCourse($id)
-//    {
-//        $course = Course::find($id);
-//
-//        if (!$course) {
-//            abort(404); // Return 404 if the course is not found
-//        }
-//
-//        return view('course_detail', ['course' => $course]);
-//    }
 
 
 
