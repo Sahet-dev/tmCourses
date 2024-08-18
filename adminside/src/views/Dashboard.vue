@@ -11,6 +11,7 @@
                 <AdminDashboard v-if="user.role === 'admin'" />
                 <TeacherDashboard v-if="user.role === 'teacher'" />
                 <ModeratorDashboard v-if="user.role === 'moderator'" />
+
                 <div class="text-red-500" v-if="errorMessage">{{ errorMessage }}</div>
 
 
@@ -24,7 +25,7 @@
 import { ref, onMounted } from 'vue';
 import apiClient from '../api/axios';
 import DashboardHeader from "../components/DashboardHeader.vue";
-import AdminSidebar from "../components/Course/admin/AdminSidebarList.vue";
+import Loader from "../components/Course/Loader.vue";
 import AdminDashboard from '../components/Course/admin/AdminDashboard.vue';
 import ModeratorDashboard from '../components/Course/moderator/ModeratorDashboard.vue';
 import { useRouter } from 'vue-router';

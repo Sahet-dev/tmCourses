@@ -39,15 +39,7 @@
                     Support
                 </router-link>
             </li>
-            <li>
-                <router-link
-                    to="/admin-dashboard/security"
-                    class="block p-3 rounded-md border border-transparent text-gray-700
-          hover:bg-blue-100 hover:border-blue-300 hover:text-blue-900 transition-all duration-300"
-                >
-                    Security
-                </router-link>
-            </li>
+
             <li>
                 <router-link
                     to="/admin-dashboard/customization"

@@ -113,7 +113,7 @@ class CourseController extends Controller
 
         // Handle thumbnail update
         if ($request->hasFile('thumbnail')) {
-            $course->thumbnail = $request->file('thumbnail')->store('thumbnails');
+            $course->thumbnail = $request->file('thumbnail')->store('thumbnails', 'public');
         }
 
         // Save the updated course

@@ -36,7 +36,9 @@
             </tr>
             </tbody>
         </table>
-        <div v-else class="text-center text-gray-500">No users found.</div>
+        <div v-else  >
+            <Loader />
+        </div>
 
 
     </div>
@@ -48,6 +50,7 @@ import { ref, onMounted } from 'vue';
 import apiClient from '../../../api/axios.js';
 import router from '../../../router'; // Import router if using Vue Router
 import axios from 'axios';
+import Loader from "../Loader.vue";
 
 const users = ref([]);
 const showModal = ref(false);

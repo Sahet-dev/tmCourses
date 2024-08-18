@@ -3,10 +3,27 @@
     <div>
         <DashboardHeader />
 
+        <transition
+            name="fade"
+
+        >
+            <div
+                v-if="notification.visible"
+                class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded"
+            >
+                {{ notification.message }}
+            </div>
+        </transition>
         <div class="p-6 bg-white rounded-md shadow-md">
+            <img :src="thumbnailUrl" :alt="course.title" class="w-full h-48 object-cover rounded mb-4" />
+
             <div v-if="course.title">
+
+
+
+
+
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Edit Course Data: {{ course.title }}</h2>
-                <img :src="course.thumbnail" alt="course.title" class="w-full h-48 object-cover rounded mb-4" />
 
                 <form @submit.prevent="updateCourseData" enctype="multipart/form-data">
                     <!-- Course Form -->
@@ -42,11 +59,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import apiClient from "../../api/axios.js";
 import DashboardHeader from "../DashboardHeader.vue";
 import Loader from "./Loader.vue";
+import ButtonSpinner from "../ButtonSpinner.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,12 +78,21 @@ const course = ref({
 
 
 const errorMessage = ref('');
+const baseUrl = import.meta.env.VITE_APP_URL || 'http://localhost:8000';
+const thumbnailUrl = computed(() => `${baseUrl}/storage/${course.value.thumbnail}`);
+const notification = ref({
+    message: '',
+    visible: false
+});
+
+
 
 const fetchCourse = async () => {
     const courseId = route.params.id;
     try {
         const response = await apiClient.get(`/courses/${courseId}`);
         course.value = response.data.course;
+
     } catch (error) {
         errorMessage.value = 'Failed to load course data.';
     }
@@ -77,7 +104,14 @@ const handleFileUpload = (event) => {
         course.value.thumbnail = file;
     }
 };
+function showNotification(message) {
+    notification.value.message = message;
+    notification.value.visible = true;
 
+    setTimeout(() => {
+        notification.value.visible = false;
+    }, 3000);
+}
 const updateCourseData = async () => {
     try {
         const formData = new FormData();
@@ -89,17 +123,15 @@ const updateCourseData = async () => {
         if (course.value.thumbnail instanceof File) {
             formData.append('thumbnail', course.value.thumbnail);
         }
-        console.log("FormData contents:");
-        formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
-        });
-        console.log('Title: ',course.value.title)
+
 
 
 
 
         formData.append('_method', 'PUT');
         const response = await apiClient.post(`/courses/${course.value.id}`, formData);
+        showNotification('Course data updated successfully!');
+
     } catch (error) {
         if (error.response && error.response.data && error.response.data.errors) {
             errorMessage.value = Object.values(error.response.data.errors).flat().join(', ');
@@ -115,22 +147,29 @@ onMounted(() => {
 });
 </script>
 <style>
-.loader {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1.5s linear infinite;
-    margin: 0 auto; /* Center the loader */
+
+.fade-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.fade-enter-to{
+    opacity: 1;
+    transform: translateY(0);
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+.fade-enter-active {
+    transition: all 0.3s ease;
 }
+.fade-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.fade-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.fade-leave-active  {
+    transition: all 0.3s ease;
+}
+
 </style>

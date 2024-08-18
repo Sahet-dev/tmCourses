@@ -51,12 +51,17 @@
                                     v-model="lessons[selectedLesson].markdown_text"
                                     :editor="editor"
                                     :config="editorConfig"
-                                    readonly
                                 />
+                                <div v-if="isMarkdownTextRequired && !isMarkdownTextValid" class="text-red-500">
+                                    Markdown text is required.
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button @click="updateLesson" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
+                    <button type="button" @click="addLesson" class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md shadow-sm hover:bg-gray-300 mb-4">
+                        + Add Another Lesson
+                    </button>
+                    <button @click="updateLesson" class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
 
                     <!-- Error Message -->
                     <div v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</div>
@@ -74,7 +79,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import apiClient from "../../api/axios.js";
 import UpdateSidebar from "./UpdateSidebar.vue";
@@ -123,13 +128,18 @@ const route = useRoute();
 const router = useRouter();
 
 
-const courses = ref({id: null}); // Initialize with default values
+const courses = ref({id: null});
 const lessons = ref([]);
 const selectedLesson = ref(null);
 const errorMessage = ref('');
 const notification = ref({
     message: '',
     visible: false
+});
+const isMarkdownTextRequired = true;
+const isMarkdownTextValid = computed(() => {
+    const markdownText = lessons.value[selectedLesson.value]?.markdown_text || '';
+    return !isMarkdownTextRequired || markdownText.trim() !== '';
 });
 const fetchLessons = async (courseId) => {
     try {
@@ -176,16 +186,17 @@ const updateLesson = async () => {
             errorMessage.value = 'No lesson selected or lessons are empty.';
             return;
         }
-
+        if (!isMarkdownTextValid.value) {
+            errorMessage.value = 'Markdown text is required.';
+            return;
+        }
         const lesson = lessons.value[selectedLesson.value];
 
-        // Check if title is present
         if (!lesson.title) {
             errorMessage.value = 'Lesson title is required.';
             return;
         }
 
-        // Prepare FormData to send
         const formData = new FormData();
         formData.append('title', lesson.title);
         formData.append('markdown_text', lesson.markdown_text);
@@ -194,22 +205,17 @@ const updateLesson = async () => {
             formData.append('video_url', lesson.videoFile);
         }
 
-        console.log("FormData contents:");
-        formData.forEach((value, key) => {
-            console.log(`${key}:`, value);
-        });
-        console.log('Title: ',lesson.value.title)
 
-        // Send PUT request
+
         formData.append('_method', 'PUT');
-        const response = await apiClient.post(`/courses/${lessons.value.id}`, formData);
+        const response = await apiClient.post(`/lessons/${lesson.id}`, formData);
 
 
         showNotification('Lesson updated successfully!');
-        console.log('Lesson updated successfully:', response.data);
 
         errorMessage.value = '';
     } catch (error) {
+
         console.error('Failed to update lesson:', error);
         if (error.response && error.response.data.errors) {
             errorMessage.value = Object.values(error.response.data.errors).flat().join(', ');
@@ -218,7 +224,45 @@ const updateLesson = async () => {
         }
     }
 };
-;
+
+const courseId = route.params.id; // Retrieve the ID from route params
+
+const addLesson = async () => {
+    try {
+        const newLessonTitle = 'New Lesson Title'; // Example title
+        const newMarkdownText = 'Dushundirilish';
+
+        const formData = new FormData();
+        formData.append('title', newLessonTitle);
+        formData.append('markdown_text', newMarkdownText);
+        // Optionally append the course_id if required
+        formData.append('course_id', courseId);
+
+        const response = await apiClient.post(`/courses/${courseId}/lessons`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+
+        });
+        showNotification('New lesson added successfully!');
+        lessons.value.push({
+            id: response.data.lesson.id,
+            title: response.data.lesson.title || 'Default Title',
+            markdown_text: response.data.lesson.markdown_text || 'Default Markdown Text',
+            video_url: response.data.lesson.video_url || 'default_video.mp4',
+            videoPreview: response.data.lesson.video_url ? `http://127.0.0.1:8000/storage/${response.data.lesson.video_url}` : 'http://127.0.0.1:8000/storage/default_video.mp4',
+        });
+
+        selectedLesson.value = lessons.value.length - 1;
+    } catch (error) {
+        console.error('Failed to add new lesson:', error);
+        if (error.response && error.response.data.errors) {
+            errorMessage.value = Object.values(error.response.data.errors).flat().join(', ');
+        } else {
+            errorMessage.value = 'Failed to add new lesson. Please try again.';
+        }
+    }
+};
+
+
 
 
 

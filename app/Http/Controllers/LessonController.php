@@ -13,27 +13,41 @@ use Illuminate\Support\Facades\Log;
 
 class LessonController extends Controller
 {
-    public function store(Request $request, $courseId)
+    public function store(Request $request, Course $course)
     {
-        if (!Gate::allows('create', Lesson::class)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        // Validate incoming request data
+        $request->validate([
+            'title' => 'nullable|string|max:255',
+            'video_url' => 'nullable|mimes:mp4,mov,avi,mpg,wmv|max:10000',
+            'markdown_text' => 'nullable|string',
+        ]);
+
+        // Create a new Lesson instance
+        $lesson = new Lesson();
+
+        // Assign course_id from the Course instance
+        $lesson->course_id = $course->id;
+
+        // Assign other attributes with default values if not provided
+        $lesson->title = $request->input('title', 'Default Title');
+        $lesson->markdown_text = $request->input('markdown_text', 'Default Markdown Text');
+
+        // Handle video upload
+        if ($request->hasFile('video_url')) {
+            $lesson->video_url = $request->file('video_url')->store('videos', 'public');
+        } else {
+            $lesson->video_url = 'default_video.mp4'; // Default video URL if no file is uploaded
         }
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'video_url' => 'required|url',
-            'markdown_text' => 'required|string',
-        ]);
+        // Save the lesson to the course
+        $course->lessons()->save($lesson);
 
-        $lesson = Lesson::create([
-            'course_id' => $courseId,
-            'title' => $validated['title'],
-            'video_url' => $validated['video_url'],
-            'markdown_text' => $validated['markdown_text'],
-        ]);
-
-        return new LessonResource($lesson);
+        // Return a JSON response with the created lesson
+        return response()->json(['lesson' => $lesson], 201);
     }
+
+
+
 
 
 

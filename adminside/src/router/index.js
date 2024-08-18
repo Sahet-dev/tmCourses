@@ -31,10 +31,12 @@ import ModeratorDashboard from '../components/Course/moderator/ModeratorDashboar
 import ContentModeration from '../components/Course/moderator/ContentModeration.vue';
 import UserReviews from '../components/Course/moderator/UserReviews.vue';
 import Reports from '../components/Course/moderator/Reports.vue';
-import Courses from "../views/Courses.vue";
+import Courses from "../views/CoursesLis.vue";
 import CourseCreationForm from "../components/Course/CourseCreationForm.vue";
 import CourseUpdateForm from "../components/Course/CourseUpdateForm.vue";
 import CourseData from "../components/Course/CourseData.vue";
+import NotFoundPage from "../components/NotFoundPage.vue";
+import Unauthorized from "../components/Unauthorized.vue";
 
 const routes = [
     // Teacher routes
@@ -103,12 +105,23 @@ const routes = [
         component: CourseData,
         props: true,
     },
+    {
+        path: '/unauthorized',
+        name: 'Unauthorized',
+        component: Unauthorized
+    },
+
+    {
+        path: '/:pathMatch(.*)*', // This will match any route that is not defined
+        name: 'NotFound',
+        component: NotFoundPage
+    },
 
     // Redirect or catch-all route
-    {
-        path: '/:catchAll(.*)',
-        redirect: '/teacher-dashboard'
-    }
+    // {
+    //     path: '/:catchAll(.*)',
+    //     redirect: '/teacher-dashboard'
+    // }
 ];
 
 const router = createRouter({
