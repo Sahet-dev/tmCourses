@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
@@ -32,6 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+
+    Route::get('/analytics/active-users', [AnalyticsController::class, 'activeUsers']);
+    Route::get('/analytics/new-subscriptions', [AnalyticsController::class, 'newSubscriptions']);
+    Route::get('/analytics/churn-rate', [AnalyticsController::class, 'churnRate']);
+    Route::get('/analytics/retention-rate', [AnalyticsController::class, 'retentionRate']);
+
 
 
 

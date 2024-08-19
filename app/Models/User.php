@@ -54,4 +54,12 @@ class User extends Authenticatable
 
         return $this->role === $roles;
     }
+
+    public static function getActiveUsers($startDate, $endDate)
+    {
+        return self::where('is_active', true)
+            ->whereBetween('last_login_at', [$startDate, $endDate])
+            ->count();
+    }
+
 }
