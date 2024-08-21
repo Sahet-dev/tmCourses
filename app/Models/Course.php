@@ -25,4 +25,15 @@ class Course extends Model
     {
         return $this->hasMany(Lesson::class);
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withPivot('completed')->withTimestamps();
+    }
+
+
+
+    public function engagements()
+    {
+        return $this->hasMany(Engagement::class);
+    }
 }

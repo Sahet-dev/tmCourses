@@ -30,7 +30,8 @@ class UserFactory extends Factory
             'is_active' => $this->faker->boolean(80), // 80% chance to be true
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'last_login_at' => $this->faker->dateTimeBetween('-1 year', 'now')
+            'last_login_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'role' => $this->faker->randomElement(['admin', 'user']),
         ];
     }
 
