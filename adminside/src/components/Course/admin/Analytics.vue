@@ -21,6 +21,27 @@
             </div>
         </div>
 
+<!--        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">-->
+<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
+<!--                <p class="text-xl font-semibold">Total Revenue</p>-->
+<!--                <p class="text-2xl font-bold">{{ totalRevenue }}</p>-->
+<!--            </div>-->
+<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
+<!--                <p class="text-xl font-semibold">Revenue by Course</p>-->
+<!--                <p class="text-2xl font-bold">{{ revenueByCourse }}</p>-->
+<!--            </div>-->
+<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
+<!--                <p class="text-xl font-semibold">ARPU</p>-->
+<!--                <p class="text-2xl font-bold">{{ arpu }}</p>-->
+<!--            </div>-->
+<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
+<!--                <p class="text-xl font-semibold">LTV</p>-->
+<!--                <p class="text-2xl font-bold">{{ ltv }}</p>-->
+<!--            </div>-->
+<!--        </div>-->
+        <FinancialMetrics />
+
+
         <div v-if="errorMessage" class="mb-4 text-red-500">
             {{ errorMessage }}
         </div>
@@ -91,6 +112,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import apiClient from "../../../api/axios.js";
+import FinancialMetrics from "./FinancialMetrics.vue";
+
+
+const totalRevenue = ref(0);
+const revenueByCourse = ref([]);
+const arpu = ref(0);
+const ltv = ref(0);
 
 const activeUsers = ref(0);
 const newSubscriptions = ref(0);
@@ -112,6 +140,18 @@ const fetchAnalyticsData = async () => {
         retention_period_start: '2024-03-01',
         retention_period_end: '2024-08-18',
     };
+
+    try {
+        const financialMetricsResponse = await apiClient.get('/analytics/financial-metrics');
+        totalRevenue.value = financialMetricsResponse.data.totalRevenue;
+        console.log(financialMetricsResponse.data.totalRevenue)
+        revenueByCourse.value = financialMetricsResponse.data.revenueByCourse;
+        arpu.value = financialMetricsResponse.data.arpu;
+        ltv.value = financialMetricsResponse.data.ltv;
+    } catch (error) {
+        errorMessage.value = 'Error fetching financial metrics.';
+        console.error(error);
+    }
 
     try {
         const activeUsersResponse = await apiClient.get('/analytics/active-users', { params });

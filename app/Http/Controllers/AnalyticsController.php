@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Services\FinancialMetricsService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller
@@ -104,4 +106,26 @@ class AnalyticsController extends Controller
 
         return response()->json(['retention_rate' => $retentionRate]);
     }
+
+    public function financialMetrics()
+    {
+
+        $startDate = Carbon::now()->subMonth(); // Example: 1 month ago
+        $endDate = Carbon::now(); // Current date
+
+        // Calculate financial metrics
+        $totalRevenue = FinancialMetricsService::getTotalRevenue();
+        $revenueByCourse = FinancialMetricsService::getRevenueByCourse();
+        $arpu = FinancialMetricsService::getARPU($startDate, $endDate);
+        $ltv = FinancialMetricsService::getLTV();
+
+        // Return data as JSON response
+        return response()->json([
+            'totalRevenue' => $totalRevenue,
+            'revenueByCourse' => $revenueByCourse,
+            'arpu' => $arpu,
+            'ltv' => $ltv,
+        ]);
+
+         }
 }

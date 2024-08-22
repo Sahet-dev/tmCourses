@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/analytics/new-subscriptions', [AnalyticsController::class, 'newSubscriptions']);
     Route::get('/analytics/churn-rate', [AnalyticsController::class, 'churnRate']);
     Route::get('/analytics/retention-rate', [AnalyticsController::class, 'retentionRate']);
+    Route::get('/analytics/financial-metrics', [AnalyticsController::class, 'financialMetrics']);
 
 
 
