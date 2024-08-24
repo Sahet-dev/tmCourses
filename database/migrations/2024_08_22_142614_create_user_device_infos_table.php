@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('gender')->nullable();
-            $table->integer('age')->nullable();
-            $table->string('location')->nullable(); // Geographical data
+        Schema::create('user_device_info', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('device');
+            $table->string('browser');
+            $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['gender', 'age', 'location']);
-        });
+        Schema::dropIfExists('user_device_info');
     }
+
 
 };

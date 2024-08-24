@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\UserDeviceInfo;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,23 +42,23 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function update(Request $request, $id): JsonResponse
-    {
-        if (!Gate::allows('update', User::class)) {
-            Log::error('Unauthorized access attempt to update a user', ['user_id' => $request->user()->id]);
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-        ]);
-
-        $user = User::findOrFail($id);
-        $user->update($validated);
-
-        return response()->json($user);
-    }
+//    public function update(Request $request, $id): JsonResponse
+//    {
+//        if (!Gate::allows('update', User::class)) {
+//            Log::error('Unauthorized access attempt to update a user', ['user_id' => $request->user()->id]);
+//            return response()->json(['message' => 'Unauthorized'], 403);
+//        }
+//
+//        $validated = $request->validate([
+//            'name' => 'required|string|max:255',
+//            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+//        ]);
+//
+//        $user = User::findOrFail($id);
+//        $user->update($validated);
+//
+//        return response()->json($user);
+//    }
 
     public function destroy(Request $request, $id): JsonResponse
     {
@@ -71,4 +72,9 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted']);
     }
+
+
+
+
+
 }

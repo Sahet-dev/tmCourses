@@ -21,24 +21,7 @@
             </div>
         </div>
 
-<!--        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">-->
-<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
-<!--                <p class="text-xl font-semibold">Total Revenue</p>-->
-<!--                <p class="text-2xl font-bold">{{ totalRevenue }}</p>-->
-<!--            </div>-->
-<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
-<!--                <p class="text-xl font-semibold">Revenue by Course</p>-->
-<!--                <p class="text-2xl font-bold">{{ revenueByCourse }}</p>-->
-<!--            </div>-->
-<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
-<!--                <p class="text-xl font-semibold">ARPU</p>-->
-<!--                <p class="text-2xl font-bold">{{ arpu }}</p>-->
-<!--            </div>-->
-<!--            <div class="bg-white shadow-md rounded-lg p-4 text-center">-->
-<!--                <p class="text-xl font-semibold">LTV</p>-->
-<!--                <p class="text-2xl font-bold">{{ ltv }}</p>-->
-<!--            </div>-->
-<!--        </div>-->
+
         <FinancialMetrics />
 
 

@@ -2,12 +2,7 @@
     <div class="p-6 bg-white shadow-md rounded-lg">
         <h1 class="text-2xl font-semibold mb-4">User Management</h1>
 
-        <!-- Add New User Button -->
-        <div class="mb-4">
-            <button @click="showAddUserModal" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-all duration-300">
-                Add New User
-            </button>
-        </div>
+
 
         <!-- User List -->
         <table v-if="users.length" class="w-full border-collapse border border-gray-200">
@@ -15,6 +10,7 @@
             <tr>
                 <th class="border border-gray-300 p-2 text-left">Name</th>
                 <th class="border border-gray-300 p-2 text-left">Email</th>
+                <th class="border border-gray-300 p-2 text-left">Role</th>
                 <th class="border border-gray-300 p-2 text-left">Actions</th>
             </tr>
             </thead>
@@ -24,7 +20,15 @@
             </tr>
             <tr v-for="user in users" :key="user.id">
                 <td class="border border-gray-300 p-2">{{ user.name }}</td>
-                <td class="border border-gray-300 p-2">{{ user.email }}</td>
+                <td class="border border-gray-300 p-2">{{ user.email }} : {{user.id}}</td>
+                <td class="border border-gray-300 p-2">
+                    <select v-model="user.role" @change="updateUserRole(user)" class="mt-1 block w-full">
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </td>
                 <td class="border border-gray-300 p-2 flex space-x-2">
                     <button @click="editUser(user)" class="bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition-all duration-300">
                         Edit
@@ -32,6 +36,7 @@
                     <button @click="deleteUser(user.id)" class="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 transition-all duration-300">
                         Delete
                     </button>
+
                 </td>
             </tr>
             </tbody>
@@ -53,12 +58,13 @@ import axios from 'axios';
 import Loader from "../Loader.vue";
 
 const users = ref([]);
-const showModal = ref(false);
+
 const isEditing = ref(false);
 const form = ref({
     id: null,
     name: '',
-    email: ''
+    email: '',
+    role: 'student',
 });
 
 const errorMessage = ref('');
@@ -79,25 +85,11 @@ const fetchUsers = async () => {
     }
 };
 
-const showAddUserModal = () => {
-    form.value = { id: null, name: '', email: '' };
-    isEditing.value = false;
-    showModal.value = true;
-};
 
-const closeModal = () => {
-    showModal.value = false;
-};
 
-const addUser = async () => {
-    try {
-        await axios.post('/api/users', form.value);
-        await fetchUsers();
-        closeModal();
-    } catch (error) {
-        console.error('Failed to add user:', error);
-    }
-};
+
+
+
 
 const editUser = (user) => {
     form.value = { ...user };
@@ -114,6 +106,27 @@ const updateUser = async () => {
         console.error('Failed to update user:', error);
     }
 };
+
+
+
+
+
+const updateUserRole = async (user) => {
+    console.log('Updating user role:', user);
+    if (!user.id) {
+        console.error('User ID is missing:', user);
+        return;
+    }
+    try {
+        await apiClient.put(`/users/bok/${user.id}`, { role: user.role });
+        await fetchUsers();
+    } catch (error) {
+        console.error('Failed to update user role:', error);
+    }
+};
+
+
+
 
 const deleteUser = async (id) => {
     try {

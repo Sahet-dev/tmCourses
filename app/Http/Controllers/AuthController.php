@@ -26,14 +26,12 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return response(['message' => 'Email or password is incorrect'], 422);
         }
+        $request->session()->regenerate();
 
         /** @var User $user */
         $user = Auth::user();
 
-//        if(!$user->is_admin){
-//            Auth::logout();
-//            return response(['message' => 'You must be an admin to login'], 403);
-//        }
+
         $token = $user->createToken('main')->plainTextToken;
         return response([
             'user' => new UserResource($user),
