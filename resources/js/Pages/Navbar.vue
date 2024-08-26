@@ -7,8 +7,21 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import {Inertia} from "@inertiajs/inertia";
 
 const showingNavigationDropdown = ref(false);
+
+// Search query state
+const searchQuery = ref('');
+
+// Search function
+const searchCourses = () => {
+    Inertia.get(route('courses.search'), { search: searchQuery.value }, {
+        preserveState: true,
+        replace: true,
+    });
+};
+
 </script>
 
 <template>
@@ -31,6 +44,17 @@ const showingNavigationDropdown = ref(false);
                         <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </NavLink>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="flex-1 sm:ml-6 flex items-center justify-center">
+                        <input
+                            v-model="searchQuery"
+                            @input="searchCourses"
+                            type="text"
+                            placeholder="Search courses..."
+                            class="p-2 border rounded w-full sm:w-1/2"
+                        />
                     </div>
                 </div>
 

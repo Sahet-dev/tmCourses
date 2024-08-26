@@ -3,17 +3,28 @@
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\MetricsController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
-    route::put('/users/bok/{id}', [\App\Http\Controllers\RoleController::class, 'updateRole']);
+    route::put('/users/bok/{id}', [RoleController::class, 'updateRole']);
+    Route::get('/analytics/course-engagement', [AnalyticsController::class, 'index']);
+    Route::get('/analytics/active-users', [AnalyticsController::class, 'activeUsers']);
+    Route::get('/analytics/new-subscriptions', [AnalyticsController::class, 'newSubscriptions']);
+    Route::get('/analytics/churn-rate', [AnalyticsController::class, 'churnRate']);
+    Route::get('/analytics/retention-rate', [AnalyticsController::class, 'retentionRate']);
+    Route::get('/analytics/financial-metrics', [AnalyticsController::class, 'financialMetrics']);
+
+
 
 });
 Route::middleware('auth:sanctum')->group(function () {
@@ -41,13 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-
-    Route::get('/analytics/course-engagement', [AnalyticsController::class, 'index']);
-    Route::get('/analytics/active-users', [AnalyticsController::class, 'activeUsers']);
-    Route::get('/analytics/new-subscriptions', [AnalyticsController::class, 'newSubscriptions']);
-    Route::get('/analytics/churn-rate', [AnalyticsController::class, 'churnRate']);
-    Route::get('/analytics/retention-rate', [AnalyticsController::class, 'retentionRate']);
-    Route::get('/analytics/financial-metrics', [AnalyticsController::class, 'financialMetrics']);
 
 
 

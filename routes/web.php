@@ -9,6 +9,9 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
+
+Route::get('/courses', [HomeController::class, 'search'])->name('courses.search');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/courses/{id}', [HomeController::class, 'show'])->name('courseDetail');
 

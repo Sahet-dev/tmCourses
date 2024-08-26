@@ -4,25 +4,54 @@
         <div class="container mx-auto p-4">
             <h1 class="text-2xl font-bold mb-6">Course Catalog</h1>
             <div v-for="course in courses" :key="course.id" class="bg-white rounded shadow p-6 mb-6">
-                <img :src="course.thumbnail" alt="course.title" class="w-full h-48 object-cover rounded mb-4" />
-                <h2 class="text-xl font-semibold mb-2">{{ course.title }}</h2>
-                <p class="text-gray-700 mb-2">{{ course.description }}</p>
+                <img
+                    :src="imageUrl(course.thumbnail)"
+                    :alt="course.title"
+                    class="w-full h-48 object-cover rounded mb-4"
+                />
+                <!-- Use v-html for highlighted text -->
+                <h2 class="text-xl font-semibold mb-2" v-html="highlight(course.title)"></h2>
+                <p class="text-gray-700 mb-2" v-html="highlight(course.description)"></p>
                 <p class="text-lg font-bold mb-2">${{ course.price }}</p>
-                <a :href="route('courseDetail', course.id)" class="text-blue-500 hover:underline" @click="navigate(course.detail_url)">View Course</a>
-                <p>{{ $route.name }}</p> <!-- Debugging output -->
+                <a
+                    :href="route('courseDetail', course.id)"
+                    class="text-blue-500 hover:underline"
+                >View Course</a>
             </div>
         </div>
     </div>
-
 </template>
 
-<script>
-import Navbar from "@/Pages/Navbar.vue";
+<script setup>
+import { computed } from 'vue';
+import Navbar from '@/Pages/Navbar.vue';
+import {usePage} from '@inertiajs/vue3';
 
-export default {
-    components: {Navbar},
-    props: {
-        courses: Array,
-    },
+// Get the props from the server using usePage
+const {props} = usePage();
+
+// Function to generate the course image URL
+const imageUrl = (thumbnail) => {
+    const baseUrl = import.meta.env.VITE_APP_URL || 'http://localhost:8000';
+    return `${baseUrl}/storage/${thumbnail}`;
 };
+
+// Function to highlight the search term
+const highlight = (text) => {
+    const search = props.filters?.search || ''; // Get search term from props
+    if (!search) return text; // If no search term, return original text
+    console.log('Search term:', search);
+    console.log('Text to highlight:', text);
+
+    // Create a case-insensitive regular expression to find the search term
+    const regex = new RegExp(`(${search})`, 'gi');
+    return text.replace(regex, '<span class="bg-yellow-200">$1</span>');
+};
+
+// Computed property for courses
+const courses = computed(() => props.courses);
 </script>
+
+<style scoped>
+
+</style>
