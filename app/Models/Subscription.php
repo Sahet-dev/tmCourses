@@ -20,7 +20,8 @@ class Subscription extends Model
         'plan',
         'starts_at',
         'ends_at',
-        'status'
+        'status',
+        'price',
     ];
 
 

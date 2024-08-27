@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -69,9 +70,22 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class)->withPivot('completed')->withTimestamps();
     }
 
-    public function engagements()
+    public function engagements(): HasMany
     {
         return $this->hasMany(Engagement::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('ends_at', '>', now()) // Ensure subscription has not expired
+            ->exists();
     }
 
 }

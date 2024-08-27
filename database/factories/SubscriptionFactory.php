@@ -23,6 +23,7 @@ class SubscriptionFactory extends Factory
             'starts_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'ends_at' => $this->faker->dateTimeBetween('now', '+1 year'),
             'status' => $this->faker->randomElement(['active', 'canceled']),
+            'price' => $this->faker->randomFloat(2, 10, 200), // Add this line
         ];
     }
 }

@@ -14,6 +14,9 @@ class RoleController extends Controller
 
     public function updateRole(Request $request, $id)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $user = User::find($id);
 
         if (!$user) {

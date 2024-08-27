@@ -12,7 +12,8 @@ use Inertia\Inertia;
 
 
 Route::get('/courses', [HomeController::class, 'search'])->name('courses.search');
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'main'])->name('home');
+Route::get('/catalog', [HomeController::class, 'index'])->name('catalog');
 Route::get('/courses/{id}', [HomeController::class, 'show'])->name('courseDetail');
 
 

@@ -14,6 +14,8 @@ class Course extends Model
         'thumbnail',
         'price',
         'teacher_id',
+        'premium',
+        'subscription_access'
     ];
 
     public function teacher()

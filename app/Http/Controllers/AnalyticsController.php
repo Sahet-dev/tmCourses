@@ -8,12 +8,15 @@ use App\Models\User;
 use App\Services\FinancialMetricsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnalyticsController extends Controller
 {
 
     public function index()
-    {
+    {if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
         // Fetch all popular courses based on enrollments
         $popularCourses = Course::withCount('users')
             ->orderBy('users_count', 'desc')
@@ -67,6 +70,9 @@ class AnalyticsController extends Controller
 
     public function activeUsers(Request $request)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
@@ -77,6 +83,9 @@ class AnalyticsController extends Controller
 
     public function newSubscriptions(Request $request)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
@@ -87,6 +96,9 @@ class AnalyticsController extends Controller
 
     public function churnRate(Request $request)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
@@ -97,6 +109,9 @@ class AnalyticsController extends Controller
 
     public function retentionRate(Request $request)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $initialPeriodStart = $request->query('initial_period_start');
         $initialPeriodEnd = $request->query('initial_period_end');
         $retentionPeriodStart = $request->query('retention_period_start');
@@ -109,6 +124,9 @@ class AnalyticsController extends Controller
 
     public function financialMetrics()
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         $startDate = Carbon::now()->subMonth(); // Example: 1 month ago
         $endDate = Carbon::now(); // Current date

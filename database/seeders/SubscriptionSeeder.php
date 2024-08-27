@@ -15,32 +15,32 @@ class SubscriptionSeeder extends Seeder
 
     public function run()
     {
-        // Active Subscription
         Subscription::create([
             'user_id' => 1,
             'starts_at' => Carbon::parse('2024-01-10'),
             'created_at' => Carbon::parse('2024-01-10'),
             'status' => 'active',
-            'plan' => 'basic',  // Add the plan field
+            'plan' => 'basic',
+            'price' => 50.00, // Add price
         ]);
 
-        // Canceled Subscription
         Subscription::create([
             'user_id' => 2,
             'starts_at' => Carbon::parse('2024-02-01'),
             'created_at' => Carbon::parse('2024-02-01'),
             'updated_at' => Carbon::parse('2024-05-01'),
             'status' => 'canceled',
-            'plan' => 'premium',  // Add the plan field
+            'plan' => 'premium',
+            'price' => 75.00, // Add price
         ]);
 
-        // Retained User
         Subscription::create([
             'user_id' => 3,
             'starts_at' => Carbon::parse('2024-01-15'),
             'created_at' => Carbon::parse('2024-01-15'),
             'status' => 'active',
-            'plan' => 'basic',  // Add the plan field
+            'plan' => 'basic',
+            'price' => 60.00, // Add price
         ]);
 
         Subscription::create([
@@ -48,7 +48,8 @@ class SubscriptionSeeder extends Seeder
             'starts_at' => Carbon::parse('2024-04-15'),
             'created_at' => Carbon::parse('2024-04-15'),
             'status' => 'active',
-            'plan' => 'premium',  // Add the plan field
+            'plan' => 'premium',
+            'price' => 100.00, // Add price
         ]);
     }
 }
