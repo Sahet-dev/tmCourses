@@ -23,12 +23,18 @@ class CourseController extends Controller
     public function index()
     {
 
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $courses = Course::all();
         return CourseResource::collection($courses);
     }
 
     public function show($id): JsonResponse
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $course = Course::with('lessons')->find($id);
 
         if (!$course) {
@@ -91,7 +97,9 @@ class CourseController extends Controller
 
     public function update(Request $request, $id)
     {
-        Log::info('Update Request Data:', $request->all());
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         // Validate the input fields
         $request->validate([
             'title' => 'required|string|max:255',

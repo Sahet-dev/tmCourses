@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Lesson;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -15,6 +16,9 @@ class LessonController extends Controller
 {
     public function store(Request $request, Course $course)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         // Validate incoming request data
         $request->validate([
             'title' => 'nullable|string|max:255',
@@ -54,7 +58,9 @@ class LessonController extends Controller
     public function update(Request $request, $id)
     {
         // Debugging: Log all incoming request data
-        Log::info('Request data:', $request->all());
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         $lesson = Lesson::findOrFail($id);
 
@@ -83,6 +89,9 @@ class LessonController extends Controller
 
     public function fetchLessons($id)
     {
+        if (!Auth::user()->hasRole(['admin', 'moderator', 'teacher'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $course = Course::with('lessons')->findOrFail($id);
         return response()->json(['lessons' => $course->lessons]);
     }

@@ -50,11 +50,17 @@ const searchCourses = () => {
                     <div class="flex-1 sm:ml-6 flex items-center justify-center">
                         <input
                             v-model="searchQuery"
-                            @input="searchCourses"
                             type="text"
                             placeholder="Search courses..."
                             class="p-2 border rounded w-full sm:w-1/2"
                         />
+                        <button
+                            @click="searchCourses"
+                            :disabled="!searchQuery.trim()"
+                            class="ml-2 p-2 border rounded bg-blue-500 text-white hover:bg-blue-600"
+                        >
+                            Search
+                        </button>
                     </div>
                 </div>
 

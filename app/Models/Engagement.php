@@ -13,7 +13,8 @@ class Engagement extends Model
         'user_id',
         'time_spent',
         'interactions',
-        'assignments_completed'
+        'assignments_completed',
+        'completed',
     ];
 
     public function course()

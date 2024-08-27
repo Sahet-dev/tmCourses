@@ -1,7 +1,7 @@
 <template>
     <div>
         <Navbar />
-        <div class="container mx-auto  overflow-y-auto">
+        <div class="container mx-auto overflow-y-auto">
             <h1 class="text-2xl font-bold mb-6">{{ course.title }}</h1>
             <img :src="thumbnailUrl" :alt="course.title" class="w-full h-48 object-cover rounded mb-4" />
             <p class="text-gray-700 mb-2">{{ course.description }}</p>
@@ -22,13 +22,15 @@
                 />
 
                 <!-- Content Area -->
-                <div :class="{'w-full': isMobile, 'w-3/4': !isMobile}" class=" bg-white m-2">
-                    <div v-if="selectedLesson" class=" rounded shadow p-2 mb-6">
+                <div :class="{'w-full': isMobile, 'w-3/4': !isMobile}" class="bg-white m-2">
+                    <div v-if="selectedLesson" class="rounded shadow p-2 mb-6">
                         <h4 class="text-lg font-semibold mb-2">{{ selectedLesson.title }}</h4>
-                        <video :src="lessonVideoUrl(selectedLesson.video_url)" controls class="w-full h-80 object-cover rounded mb-4 aspect-ratio-16">
-
-                        </video>
+                        <video v-if="selectedLesson.video_url" :src="lessonVideoUrl(selectedLesson.video_url)" controls class="w-full h-80 object-cover rounded mb-4 aspect-ratio-16"></video>
                         <div v-html="selectedLesson.markdown_text"></div>
+                    </div>
+                    <!-- Show only titles for remaining lessons -->
+                    <div v-else>
+                        <h4 v-for="lesson in titleOnlyLessons" :key="lesson.id" class="text-lg font-semibold mb-2">{{ lesson.title }}</h4>
                     </div>
                 </div>
             </div>
@@ -37,16 +39,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import {ref, computed, onMounted, onBeforeUnmount} from 'vue';
 import Sidebar from '@/Pages/Sidebar.vue';
 import Navbar from '@/Pages/Navbar.vue';
 
 const props = defineProps({
     course: Object,
+    detailedLessons: Array,
+    titleOnlyLessons: Array,
 });
 
 const course = ref(props.course);
-const selectedLesson = ref(course.value.lessons?.[0] || null);
+const detailedLessons = ref(props.detailedLessons);
+const titleOnlyLessons = ref(props.titleOnlyLessons);
+const selectedLesson = ref(detailedLessons.value[0] || null);
 
 // Reactive state
 const isMobile = ref(window.innerWidth < 768);
