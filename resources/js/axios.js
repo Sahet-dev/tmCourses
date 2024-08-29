@@ -1,13 +1,22 @@
 import axios from 'axios';
 
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+const apiClient = axios.create({
+    baseURL: 'http://localhost:8000/api',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+});
 
-let token = document.head.querySelector('meta[name="csrf-token"]');
+// Interceptor to add token to headers
+apiClient.interceptors.request.use(config => {
+    const token = localStorage.getItem('token'); // Adjust as needed for how you store tokens
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+}, error => {
+    return Promise.reject(error);
+});
 
-if (token) {
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-
-export default axios;
+export default apiClient;

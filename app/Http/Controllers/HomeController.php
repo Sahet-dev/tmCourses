@@ -114,6 +114,151 @@ class HomeController
         ]);
     }
 
+    public function notificationsPage()
+    {
+        $notifications = [
+            [
+                'id' => 1,
+                'title' => 'New Comment on Your Post',
+                'message' => 'Someone commented on your post. Check it out!',
+                'date' => now()->format('Y-m-d H:i'),
+            ],
+            [
+                'id' => 2,
+                'title' => 'System Update Available',
+                'message' => 'A new system update is available. Please update your system.',
+                'date' => now()->subDay()->format('Y-m-d H:i'),
+            ],[
+                'id' => 2,
+                'title' => 'System Update Available',
+                'message' => 'A new system update is available. Please update your system.',
+                'date' => now()->subDay()->format('Y-m-d H:i'),
+            ],[
+                'id' => 2,
+                'title' => 'System Update Available',
+                'message' => 'A new system update is available. Please update your system.',
+                'date' => now()->subDay()->format('Y-m-d H:i'),
+            ],[
+                'id' => 2,
+                'title' => 'System Update Available',
+                'message' => 'A new system update is available. Please update your system.',
+                'date' => now()->subDay()->format('Y-m-d H:i'),
+            ],
+        ];
 
+        // Return Inertia response with data
+        return Inertia::render('NotificationsPage', [
+            'notifications' => $notifications,
+        ]);
+    }
+
+    public function showAccount()
+    {
+        $dummyData = [
+            'user' => [
+                'id' => 1,
+                'name' => 'John Doe',
+                'email' => 'john.doe@example.com',
+                'created_at' => '2024-08-28',
+            ],
+            'accountDetails' => [
+                'plan' => 'Pro',
+                'expires_at' => '2024-12-31',
+                'last_payment' => '2024-07-25',
+            ],
+        ];
+
+        // Render the Account.vue component with Inertia and pass the dummy data
+        return Inertia::render('Account', [
+            'user' => $dummyData['user'],
+            'accountDetails' => $dummyData['accountDetails'],
+        ]);
+    }
+
+    public function completed()
+    {
+        $completedCourses = [
+            [
+                'id' => 1,
+                'title' => 'Introduction to Laravel',
+                'completed_at' => '2024-08-01',
+                'progress' => '100%',
+                'rating' => 5,
+            ],
+            [
+                'id' => 2,
+                'title' => 'Advanced Vue.js Techniques',
+                'completed_at' => '2024-08-15',
+                'progress' => '100%',
+                'rating' => 4,
+            ],
+            [
+                'id' => 3,
+                'title' => 'Building REST APIs with PHP',
+                'completed_at' => '2024-08-22',
+                'progress' => '100%',
+                'rating' => 5,
+            ],
+        ];
+
+        return Inertia::render('Completed', [
+            'completedCourses' => $completedCourses,
+        ]);
+    }
+
+    public function bookmarks()
+    {
+        $bookmarkedItems = [
+            [
+                'id' => 1,
+                'title' => 'Vue.js for Beginners',
+                'type' => 'Course',
+                'bookmarked_at' => '2024-08-05',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Laravel Tips and Tricks',
+                'type' => 'Article',
+                'bookmarked_at' => '2024-08-10',
+            ],
+            [
+                'id' => 3,
+                'title' => 'Building APIs with Laravel',
+                'type' => 'Video',
+                'bookmarked_at' => '2024-08-20',
+            ],
+        ];
+
+        return Inertia::render('Bookmarks', [
+            'bookmarkedItems' => $bookmarkedItems,
+        ]);
+    }
+
+
+    public function activity()
+    {
+        // Dummy data for the Activity page
+        $activities = [
+            [
+                'id' => 1,
+                'action' => 'User logged in',
+                'date' => '2024-08-25 10:30 AM',
+            ],
+            [
+                'id' => 2,
+                'action' => 'User completed a course: "Vue.js Basics"',
+                'date' => '2024-08-24 03:45 PM',
+            ],
+            [
+                'id' => 3,
+                'action' => 'User bookmarked an article: "Laravel Tips and Tricks"',
+                'date' => '2024-08-23 08:20 AM',
+            ],
+        ];
+
+        return Inertia::render('Activity', [
+            'activities' => $activities,
+        ]);
+    }
 
 }
