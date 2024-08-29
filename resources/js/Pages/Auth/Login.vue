@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {Inertia} from "@inertiajs/inertia";
 
 defineProps({
     canResetPassword: {
@@ -25,6 +26,8 @@ const form = useForm({
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
+        onSuccess: () => Inertia.visit(route('main-page')),
+
     });
 };
 </script>

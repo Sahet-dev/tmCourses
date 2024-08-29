@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -260,5 +262,37 @@ class HomeController
             'activities' => $activities,
         ]);
     }
+
+
+    public function login(Request $request)
+    {
+        // Validate the login request
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+            'remember' => 'boolean',
+        ]);
+
+        // Attempt to log the user in
+        if (!Auth::attempt($request->only('email', 'password'), $request->remember)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        // Retrieve the authenticated user
+        $user = Auth::user();
+
+        // Generate a token for the user
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        // Return a JSON response with user details and token
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token,
+        ]);
+    }
+
 
 }

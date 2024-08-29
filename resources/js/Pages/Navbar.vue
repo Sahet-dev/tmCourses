@@ -130,12 +130,19 @@
                         </div>
                     </div>
                     <div v-else>
-                        <Link :href="route('login')" class="text-gray-200  border-b border-gray-200 bg-amber-700 p-2 rounded hover:text-gray-100 hover:bg-amber-800 focus:outline-none transition ease-in-out duration-150">
+<!--                        <Link :href="route('login')" class="text-gray-200  border-b border-gray-200 bg-amber-700 p-2 rounded hover:text-gray-100 hover:bg-amber-800 focus:outline-none transition ease-in-out duration-150">-->
+<!--                            Login-->
+<!--                        </Link>-->
+                        <button
+                            @click="redirectToLogin"
+                            class="text-gray-200 border-b border-gray-200 bg-amber-700 p-2 rounded hover:text-gray-100 hover:bg-amber-800 focus:outline-none transition ease-in-out duration-150"
+                        >
                             Login
-                        </Link>
-                        <Link :href="route('register')" class="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        </button>
+                        <button
+                            @click="redirectToRegister" class="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             Register
-                        </Link>
+                        </button>
                     </div>
                 </div>
 
@@ -299,6 +306,7 @@ import { Link } from '@inertiajs/vue3';
 import {Inertia} from "@inertiajs/inertia";
 import { useRouter } from 'vue-router';
 import { beforeEnterEl, enterEl, lenis } from '@/utils/animations';
+import {PresentationChartLineIcon} from "@heroicons/vue/24/outline/index.js";
 
 const router = useRouter();
 
@@ -320,6 +328,19 @@ const searchCourses = () => {
         replace: true,
     });
 };
+
+const redirectToLogin = () => {
+    // router.push({ name: 'login' });
+    Inertia.visit(route('login'));
+
+
+};const redirectToRegister = () => {
+    // router.push({ name: 'login' });
+    Inertia.visit(route('register'));
+
+
+};
+
 onMounted(() => {
 
 

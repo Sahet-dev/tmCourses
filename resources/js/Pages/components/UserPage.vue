@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Navbar />
         <div class="min-h-screen bg-gradient-to-r from-gray-100 via-pink-50 to-blue-50 ">
             <header class="bg-gradient-to-r from-blue-200 via-purple-100 to-pink-200 shadow-md">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

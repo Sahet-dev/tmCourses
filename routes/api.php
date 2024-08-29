@@ -23,6 +23,7 @@ Route::get('/activity', [StudentCourseController::class, 'activity'])->name('act
 
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/user-login', [HomeController::class, 'login']);
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     route::put('/users/bok/{id}', [RoleController::class, 'updateRole']);

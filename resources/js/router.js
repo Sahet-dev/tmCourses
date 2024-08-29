@@ -7,6 +7,7 @@ import Account from '@/Pages/Account.vue';
 import Bookmarks from '@/Pages/Bookmarks.vue';
 import Completed from '@/Pages/Completed.vue';
 import NotFound from "@/Pages/NotFound.vue";
+import Login from "@/Pages/Auth/Login.vue";
 
 const routes = [
     {
@@ -58,6 +59,12 @@ const routes = [
         name: 'NotFound',
         component: NotFound,
     },
+    {
+        path: '/login',
+        name: 'login',  // This name should match what you use in router.push({ name: 'login' })
+        component: Login,
+    },
+
 ];
 const router = createRouter({
     history: createWebHistory(),
