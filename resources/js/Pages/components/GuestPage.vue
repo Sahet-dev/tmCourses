@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Navbar />
         <div class="page-container">
             <!-- Hero Section -->
             <section class="hero-section">

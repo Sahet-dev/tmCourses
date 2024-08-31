@@ -8,6 +8,10 @@ const apiClient = axios.create({
     }
 });
 
+export const setupCsrf = async () => {
+    await apiClient.get('/sanctum/csrf-cookie'); // This will set the `XSRF-TOKEN` cookie
+};
+
 // Interceptor to add token to headers
 apiClient.interceptors.request.use(config => {
     const token = localStorage.getItem('token'); // Adjust as needed for how you store tokens

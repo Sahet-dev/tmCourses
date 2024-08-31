@@ -17,15 +17,10 @@
 <script setup>
 import Navbar from "@/Pages/Navbar.vue";
 import '../../css/mainPage.css'
-import imageUrl from '../../../storage/app/public/thumbnails/Screenshot 2024-08-27 124053.png';
-import {onMounted, ref, watch} from "vue";
-import { Inertia } from "@inertiajs/inertia";
-import Footer from "../../../adminside/src/views/components/Footer.vue";
 import Lenis from '@studio-freight/lenis'
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Icons from "@/Components/Icons.vue";
-import GuesPage from "@/Pages/components/GuesPage.vue";
+import GuesPage from "@/Pages/components/GuestPage.vue";
 import UserPage from "@/Pages/components/UserPage.vue";
 
 

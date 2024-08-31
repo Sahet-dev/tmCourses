@@ -6,7 +6,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
-                    <div class="relative shrink-0 flex items-center">
+                    <div class="relative shrink-0 flex items-center mr-2">
                         <Link :href="route('main-page')" class="flex items-center"> <!-- Flex container for logo and text -->
                             <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
                             <span class="hidden md:block ml-2">TmCourses</span> <!-- Text beside the logo -->
@@ -130,19 +130,16 @@
                         </div>
                     </div>
                     <div v-else>
-<!--                        <Link :href="route('login')" class="text-gray-200  border-b border-gray-200 bg-amber-700 p-2 rounded hover:text-gray-100 hover:bg-amber-800 focus:outline-none transition ease-in-out duration-150">-->
-<!--                            Login-->
-<!--                        </Link>-->
-                        <button
-                            @click="redirectToLogin"
-                            class="text-gray-200 border-b border-gray-200 bg-amber-700 p-2 rounded hover:text-gray-100 hover:bg-amber-800 focus:outline-none transition ease-in-out duration-150"
-                        >
-                            Login
-                        </button>
-                        <button
-                            @click="redirectToRegister" class="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            Register
-                        </button>
+                        <div class="flex space-x-4 items-center justify-center">
+                            <Link :href="route('user.login')" class="text-gray-200  border-b border-gray-200 bg-blue-500 p-2 rounded hover:text-gray-100 hover:bg-blue-800 focus:outline-none transition ease-in-out duration-150">
+                                Login
+                            </Link>
+
+                            <Link :href="route('user.register')" class="ml-4 text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                Register
+                            </Link>
+                        </div>
+
                     </div>
                 </div>
 
@@ -287,8 +284,8 @@
                 </div>
 
                 <div class="mt-3 space-y-1" v-else>
-                    <ResponsiveNavLink :href="route('login')"> Login </ResponsiveNavLink>
-                    <ResponsiveNavLink :href="route('register')"> Register </ResponsiveNavLink>
+                    <ResponsiveNavLink :href="route('user.login')"> Login </ResponsiveNavLink>
+                    <ResponsiveNavLink :href="route('user.register')"> Register </ResponsiveNavLink>
                 </div>
             </div>
         </div>
@@ -329,17 +326,7 @@ const searchCourses = () => {
     });
 };
 
-const redirectToLogin = () => {
-    // router.push({ name: 'login' });
-    Inertia.visit(route('login'));
 
-
-};const redirectToRegister = () => {
-    // router.push({ name: 'login' });
-    Inertia.visit(route('register'));
-
-
-};
 
 onMounted(() => {
 

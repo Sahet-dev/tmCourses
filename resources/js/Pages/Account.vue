@@ -1,52 +1,123 @@
 <template>
-    <div class="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md">
-        <h1 class="text-2xl font-bold mb-4">Account Details</h1>
-        <div v-if="loading" >
-            <Loader />
-        </div>
-        <div v-else>
-            <div class="mb-4">
-                <h2 class="text-lg font-semibold">User Information</h2>
-                <p><strong>Name:</strong> {{ user.name }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Joined:</strong> {{ user.created_at }}</p>
-            </div>
-            <div>
-                <h2 class="text-lg font-semibold">Subscription Information</h2>
-                <p><strong>Plan:</strong> {{ accountDetails.plan }}</p>
-                <p><strong>Expires At:</strong> {{ accountDetails.expires_at }}</p>
-                <p><strong>Last Payment:</strong> {{ accountDetails.last_payment }}</p>
-            </div>
-        </div>
+    <div class="w-full max-w-md px-2 py-16 sm:px-0">
+        <TabGroup>
+            <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+                <Tab
+                    v-for="category in Object.keys(categories)"
+                    as="template"
+                    :key="category"
+                    v-slot="{ selected }"
+                >
+                    <button
+                        :class="[
+              'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
+              'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+              selected
+                ? 'bg-white text-blue-700 shadow'
+                : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+            ]"
+                    >
+                        {{ category }}
+                    </button>
+                </Tab>
+            </TabList>
+
+            <TabPanels class="mt-2">
+                <TabPanel
+                    v-for="(posts, idx) in Object.values(categories)"
+                    :key="idx"
+                    :class="[
+            'rounded-xl bg-white p-3',
+            'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+          ]"
+                >
+                    <ul>
+                        <li
+                            v-for="post in posts"
+                            :key="post.id"
+                            class="relative rounded-md p-3 hover:bg-gray-100"
+                        >
+                            <h3 class="text-sm font-medium leading-5">
+                                {{ post.title }}
+                            </h3>
+
+                            <ul
+                                class="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500"
+                            >
+                                <li>{{ post.date }}</li>
+                                <li>&middot;</li>
+                                <li>{{ post.commentCount }} comments</li>
+                                <li>&middot;</li>
+                                <li>{{ post.shareCount }} shares</li>
+                            </ul>
+
+                            <a
+                                href="#"
+                                :class="[
+                  'absolute inset-0 rounded-md',
+                  'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2',
+                ]"
+                            />
+                        </li>
+                    </ul>
+                </TabPanel>
+            </TabPanels>
+        </TabGroup>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import apiClient from "@/axios.js";
-import Loader from "@/Pages/components/Loader.vue"; // Adjust the path as needed
+import {ref} from 'vue'
+import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
 
-const user = ref({});
-const accountDetails = ref({});
-const loading = ref(true);
-
-const fetchData = async () => {
-    try {
-        const response = await apiClient.get('/account');
-        user.value = response.data.user;
-        accountDetails.value = response.data.accountDetails;
-    } catch (error) {
-        console.error('Error fetching account data:', error);
-    } finally {
-        loading.value = false;
-    }
-};
-
-onMounted(() => {
-    fetchData();
-});
+const categories = ref({
+    Recent: [
+        {
+            id: 1,
+            title: 'Does drinking coffee make you smarter?',
+            date: '5h ago',
+            commentCount: 5,
+            shareCount: 2,
+        },
+        {
+            id: 2,
+            title: "So you've bought coffee... now what?",
+            date: '2h ago',
+            commentCount: 3,
+            shareCount: 2,
+        },
+    ],
+    Popular: [
+        {
+            id: 1,
+            title: 'Is tech making coffee better or worse?',
+            date: 'Jan 7',
+            commentCount: 29,
+            shareCount: 16,
+        },
+        {
+            id: 2,
+            title: 'The most innovative things happening in coffee',
+            date: 'Mar 19',
+            commentCount: 24,
+            shareCount: 12,
+        },
+    ],
+    Trending: [
+        {
+            id: 1,
+            title: 'Ask Me Anything: 10 answers to your questions about coffee',
+            date: '2d ago',
+            commentCount: 9,
+            shareCount: 5,
+        },
+        {
+            id: 2,
+            title: "The worst advice we've ever heard about coffee",
+            date: '4d ago',
+            commentCount: 1,
+            shareCount: 2,
+        },
+    ],
+})
 </script>
-
-<style scoped>
-/* Add any custom styles you want for the Account page */
-</style>

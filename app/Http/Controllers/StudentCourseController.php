@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class StudentCourseController extends Controller
@@ -28,23 +29,45 @@ class StudentCourseController extends Controller
         ]);
     }
 
+
+
     public function showAccount(): JsonResponse
     {
-        $dummyData = [
+        $user = Auth::user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        // Fetch user data and related subscriptions
+        $accountDetails = $user->subscriptions()
+            ->where('status', 'active') // Assuming the subscription table has 'status' column
+            ->select('plan', 'expires_at', 'last_payment') // Adjust these fields as per your Subscription table
+            ->first(); // Fetch the first active subscription
+
+        // Check if there is no active subscription
+        $accountDetails = $accountDetails ?? [
+            'plan' => 'None',
+            'expires_at' => null,
+            'last_payment' => null,
+        ];
+
+        $data = [
             'user' => [
-                'id' => 1,
-                'name' => 'John Doe',
-                'email' => 'john.doe@example.com',
-                'created_at' => '2024-08-28',
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->format('Y-m-d'),
             ],
             'accountDetails' => [
-                'plan' => 'Pro',
-                'expires_at' => '2024-12-31',
-                'last_payment' => '2024-07-25',
+                'plan' => $accountDetails->plan ?? 'Free', // Default to 'Free' if no subscription exists
+                'expires_at' => $accountDetails->expires_at ?? 'N/A',
+                'last_payment' => $accountDetails->last_payment ?? 'N/A',
             ],
         ];
 
-        return response()->json($dummyData);
+        return response()->json($data);
     }
 
     public function completed(): JsonResponse
