@@ -1,38 +1,26 @@
 <?php
 
 namespace App\Jobs;
-    
-use App\Models\User;
+
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\Jobs\Job;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SendEmailVerification extends Job
+class SendEmailVerification implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $user;
+    // Add your class properties and methods here
 
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
+        // Constructor logic
     }
 
     public function handle()
     {
-        // Send the email verification
-        Mail::to($this->user->email)->send(new \App\Mail\VerifyEmail($this->user));
-    }
-
-    public function getJobId()
-    {
-        // TODO: Implement getJobId() method.
-    }
-
-    public function getRawBody()
-    {
-        // TODO: Implement getRawBody() method.
+        // Handle the job logic here
     }
 }

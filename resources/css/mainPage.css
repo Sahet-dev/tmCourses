@@ -411,3 +411,103 @@
     }
 }
 
+
+
+
+
+
+
+
+    /* General Styles */
+    .section-1a2b3c {
+        padding: 2rem; /* Adjust padding as needed */
+        background: linear-gradient(135deg, #e7dcdb, #f4eee2, #d1e7dc, #f0dee9); /* Four-color gradient */
+        background-size: 400% 400%; /* Ensure smooth gradient transition */
+        animation: gradientAnimation 15s ease infinite; /* Optional: animation for gradient effect */
+    }
+
+    /* Optional: Animation for a smooth gradient transition */
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 0%; }
+        50% { background-position: 100% 100%; }
+        100% { background-position: 0% 0%; }
+    }
+
+    .container-4d5e6f {
+        max-width: 1200px; /* Adjust max-width as needed */
+        margin: 0 auto; /* Center container horizontally */
+        padding: 0 1rem; /* Horizontal padding */
+    }
+
+    .title-7g8h9i {
+        font-size: 2rem; /* Adjust font size */
+        font-weight: bold;
+        margin-bottom: 1.5rem; /* Space below title */
+    }
+
+    .grid-0a1b2c {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+        gap: 1.5rem; /* Space between grid items */
+    }
+
+    .card-3d4e5f {
+        background-color: #fff; /* White background for cards */
+        padding: 1rem; /* Padding inside cards */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        display: flex;
+        flex-direction: column; /* Stack content vertically */
+    }
+
+    .image-6f7g8h {
+        width: 100%; /* Full width */
+        height: 200px; /* Fixed height */
+        object-fit: cover; /* Cover the area without distortion */
+        border-radius: 8px; /* Rounded corners for image */
+        margin-bottom: 1rem; /* Space below image */
+    }
+
+    .name-9i0j1k {
+        font-size: 1.25rem; /* Font size for title */
+        font-weight: bold;
+        margin-bottom: 0.5rem; /* Space below title */
+    }
+
+    .description-2l3m4n {
+        color: #666; /* Dark gray text color */
+        margin-bottom: 0.5rem; /* Space below description */
+    }
+
+    .price-5o6p7q {
+        font-size: 1.125rem; /* Font size for price */
+        font-weight: bold;
+    }
+
+    .button-container-8r9s0t {
+        margin-top: 2rem; /* Space above button */
+        text-align: center; /* Center align button */
+    }
+
+    .button-1u2v3w {
+        background-color: #007bff; /* Blue background color */
+        color: #fff; /* White text */
+        padding: 0.5rem 1rem; /* Padding inside button */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 1rem; /* Font size for button */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+    .button-1u2v3w:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .grid-0a1b2c {
+            grid-template-columns: 1fr; /* Single column layout on smaller screens */
+        }
+    }
+

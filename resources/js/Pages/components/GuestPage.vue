@@ -81,6 +81,33 @@
             <!-- Why Us Section -->
             <Icons />
 
+
+
+
+            <!-- Latest Courses Section -->
+            <section class="section-1a2b3c animated-element">
+                <div class="container-4d5e6f">
+                    <h2 class="title-7g8h9i text-center">New Courses</h2>
+                    <div class="grid-0a1b2c">
+                        <div v-for="lcourse in latestCourses" :key="lcourse.id" class="card-3d4e5f">
+                            <img :src="lcourse.thumbnail" :alt="lcourse.title" class="image-6f7g8h">
+                            <h3 class="name-9i0j1k">{{ lcourse.title }}</h3>
+                            <p class="description-2l3m4n">{{ lcourse.description }}</p>
+                            <p class="price-5o6p7q">${{ lcourse.price }}</p>
+                        </div>
+                    </div>
+                    <div class="button-container-8r9s0t">
+                        <button class="button-1u2v3w">See All Courses</button>
+                    </div>
+                </div>
+            </section>
+
+
+
+
+
+
+
             <!-- Testimonials Section -->
             <section class="testimonials-section animated-element">
                 <div class="container">
@@ -96,6 +123,18 @@
                     </div>
                 </div>
             </section>
+
+
+
+
+
+
+
+
+
+
+
+
 
             <!-- Call to Action Section -->
             <section class="cta-section animated-element">
@@ -130,6 +169,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Icons from "@/Components/Icons.vue";
 
 
+
+const props = defineProps({
+    popularCourses: {
+        type: Array,
+        required: true,
+    },
+    latestCourses: {
+        type: Array,
+        required: true,
+    },
+});
+
+
 gsap.registerPlugin(ScrollTrigger);
 
 const lenis = new Lenis()
@@ -151,37 +203,7 @@ const searchQuery = ref('');
 const transitionsCompleted = ref(0);
 const totalTransitions = 4;
 
-// Sample data for popular courses
-const popularCourses = ref([
-    {
-        id: 1,
-        title: 'Learn Web Development',
-        description: 'Master the basics of HTML, CSS, and JavaScript.',
-        price: 49.99,
-        thumbnail: 'path/to/image1.jpg',
-    },
-    {
-        id: 2,
-        title: 'Advanced JavaScript',
-        description: 'Deep dive into JavaScript ES6+ features.',
-        price: 59.99,
-        thumbnail: 'path/to/image2.jpg',
-    },{
-        id: 2,
-        title: 'Advanced JavaScript',
-        description: 'Deep dive into JavaScript ES6+ features.',
-        price: 59.99,
-        thumbnail: 'path/to/image2.jpg',
-    },{
-        id: 2,
-        title: 'Advanced JavaScript',
-        description: 'Deep dive into JavaScript ES6+ features.',
-        price: 59.99,
-        thumbnail: 'path/to/image2.jpg',
-    },
-    // Add more course data as needed...
-]);
-// Search function
+
 const searchCourses = () => {
     Inertia.get(route('courses.search'), { search: searchQuery.value }, {
         preserveState: true,

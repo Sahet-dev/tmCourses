@@ -177,7 +177,12 @@ class HomeController
                 'date' => '2024-08-23 08:20 AM',
             ],
         ];
-
+        $latestCourses = Course::select('title', 'description', 'price', 'thumbnail')->latest()->take(4)->get();
+        $popularCourses = Course::select('title', 'description', 'price', 'thumbnail') // Specify columns
+        ->withCount('engagements') // Include engagement count if needed
+        ->orderBy('engagements_count', 'desc') // Order by engagement count
+        ->take(4) // Limit to 4 courses
+        ->get();
 
 
 
@@ -193,7 +198,10 @@ class HomeController
             ]);
         } else {
             // User is not logged in, render the GuestPage component
-            return Inertia::render('components/GuestPage');
+            return Inertia::render('components/GuestPage',[
+                'popularCourses' => $popularCourses,
+                'latestCourses' => $latestCourses
+            ]);
         }
     }
 
